@@ -1,0 +1,18 @@
+pub const ParseError = enum {
+    InvalidCharacter,
+    MissingReturnType,
+    MissingSemicolon,
+    MissingComma,
+    MissingPayload,
+    SemicolonAfterStatement,
+    SemicolonExpectedComma,
+    ColonExpectedEqual,
+    CommaExpectedSemicolon,
+    UnmatchedBrace,
+    UnmatchedBracket,
+    UnmatchedParen,
+    DiscardedLine,
+    LCurlyExpectedLBrace,
+    DetachedAsync,
+    AbortedParse,
+};

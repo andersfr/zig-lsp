@@ -1,0 +1,6 @@
+*.o
+*.swp
+zig-cache
+server
+parser
+zig-flat-hash
