@@ -35,3 +35,8 @@ Will be posted once a proper language-zig package exists.
 - [ ] Signature help
 - [ ] References
 - [ ] Go to implementation
+
+#### How does it work
+The grammars are written in LALR using a custom tool that converts the `ziglang.zig` and `jsonlang.zig` definition files into the `*_grammar.*.zig` files. Textual representations of the LALR rules are in `zig_grammar.txt` and `json_grammar.txt`.
+
+The Zig parser has a best-effort recovery mechanism. Currently it has severe limitations on unmatched braces, brackets, and parentheses. Fortunately most editors will automatically close these tokens and circumvent the problem. This is planned to be fixed in future versions.
