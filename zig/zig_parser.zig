@@ -359,7 +359,7 @@ const Engine = struct {
                     }
                     // Recovers after ContainerField;
                     else if(id == .ContainerField) {
-                        // This is actually allowed but easier to recover than parse
+                        try self.reportError(ParseError.SemicolonExpectedComma, token);
                         return try self.action(Id.Comma, token);
                     }
                 },

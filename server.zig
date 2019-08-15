@@ -5,6 +5,7 @@ const ZigParser = @import("zig/zig_parser.zig").Parser;
 const ZigNode = @import("zig/zig_parser.zig").Node;
 
 usingnamespace @import("json/json.zig");
+usingnamespace @import("errors.zig");
 
 const allocator = std.heap.c_allocator;
 
@@ -63,7 +64,7 @@ fn processSource(uri: []const u8, version: usize, source: []const u8) !void {
                 try stream.write(
                     \\}},"severity":1,"source":"zig-lsp","message":
                 );
-                try stream.print("\"{}\",\"code\":\"{}\"", @tagName(err.info), @enumToInt(err.info));
+                try stream.print("\"{}\",\"code\":\"{}\"", parseErrorToString(err.info), @tagName(err.info));
                 try stream.write(
                     \\,"relatedInformation":[]},
                 );

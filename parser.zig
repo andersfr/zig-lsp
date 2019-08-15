@@ -4,6 +4,8 @@ const warn = std.debug.warn;
 const ZigParser = @import("zig/zig_parser.zig").Parser;
 const ZigNode = @import("zig/zig_parser.zig").Node;
 
+usingnamespace @import("errors.zig");
+
 pub fn main() !void {
     var allocator = std.heap.c_allocator;
 
@@ -24,7 +26,7 @@ pub fn main() !void {
     if(try parser.run(buffer)) {
         var eit = parser.engine.errors.iterator(0);
         while(eit.next()) |err| {
-            warn("{}\n", err);
+            warn("{}:{}-{} {}\n", err.line, err.start, err.end, parseErrorToString(err.info));
         }
     }
 }
