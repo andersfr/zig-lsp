@@ -34,6 +34,7 @@ pub extern "LALR" const zig_grammar = struct {
         },
         left: enum {
             Keyword_and,
+            AmpersandAmpersand,
         },
         left: enum {
             // CompareOp
@@ -214,15 +215,6 @@ pub extern "LALR" const zig_grammar = struct {
         arg1.body_node = &arg2.base;
         result = &arg1.base;
     }
-    fn TopLevelDecl(AsyncPrefix: *Node.AsyncAttribute, FnProto: *Node.FnProto, Semicolon: *Token) *Node {
-        result = &arg2.base;
-        arg2.async_attr = arg1;
-    }
-    fn TopLevelDecl(AsyncPrefix: *Node.AsyncAttribute, FnProto: *Node.FnProto, Block: *Node.Block) *Node {
-        result = &arg2.base;
-        arg2.async_attr = arg1;
-        arg2.body_node = &arg3.base;
-    }
     fn TopLevelDecl(Keyword_extern: *Token, StringLiteral: *Token, FnProto: *Node.FnProto, Semicolon: *Token) *Node {
         result = &arg3.base;
         const lib_name = try parser.createNode(Node.StringLiteral);
@@ -347,19 +339,6 @@ pub extern "LALR" const zig_grammar = struct {
         node.align_expr = arg7;
         node.section_expr = arg8;
         node.return_type = Node.FnProto.ReturnType{ .InferErrorSet = &vnode.base };
-        result = node;
-    }
-
-    fn AsyncPrefix(Keyword_async: *Token) *Node.AsyncAttribute {
-        const node = try parser.createNode(Node.AsyncAttribute);
-        node.async_token = arg1;
-        result = node;
-    }
-    fn AsyncPrefix(Keyword_async: *Token, LParen: *Token, Expr: *Node, RParen: Precedence_none(*Token)) *Node.AsyncAttribute {
-        const node = try parser.createNode(Node.AsyncAttribute);
-        node.async_token = arg1;
-        node.allocator_type = arg3;
-        node.rangle_bracket = arg4;
         result = node;
     }
 
@@ -666,23 +645,6 @@ pub extern "LALR" const zig_grammar = struct {
         result = arg2;
     }
 
-    fn Expr(AsyncPrefix: *Node.AsyncAttribute, Expr: *Node) *Node {
-        result = arg2;
-        if(arg2.cast(Node.SuffixOp)) |suffix| {
-            switch(suffix.op) {
-                .Call => |call| {
-                    suffix.op.Call.async_attr = arg1;
-                },
-                else => {
-                    try parser.reportError(ParseError.DetachedAsync, arg1.async_token);
-                }
-            }
-        }
-        else {
-            try parser.reportError(ParseError.DetachedAsync, arg1.async_token);
-        }
-    }
-
     // Recovery
     fn Expr(Recovery: *Token) *Node {
         const node = try parser.createNode(Node.Recovery);
@@ -724,6 +686,15 @@ pub extern "LALR" const zig_grammar = struct {
         node.lhs = arg1;
         node.op_token = arg2;
         node.op = .BoolOr;
+        node.rhs = arg3;
+        result = &node.base;
+    }
+    fn Expr(Expr: *Node, AmpersandAmpersand: *Token, Expr: *Node) *Node {
+        try parser.reportError(ParseError.AmpersandAmpersand, arg2);
+        const node = try parser.createNode(Node.InfixOp);
+        node.lhs = arg1;
+        node.op_token = arg2;
+        node.op = .BoolAnd;
         node.rhs = arg3;
         result = &node.base;
     }
@@ -945,6 +916,13 @@ pub extern "LALR" const zig_grammar = struct {
         const node = try parser.createNode(Node.PrefixOp);
         node.op_token = arg1;
         node.op = .AddressOf;
+        node.rhs = arg2;
+        result = &node.base;
+    }
+    fn Expr(Keyword_async: *Token, Expr: *Node) *Node {
+        const node = try parser.createNode(Node.PrefixOp);
+        node.op_token = arg1;
+        node.op = .Async;
         node.rhs = arg2;
         result = &node.base;
     }
@@ -1345,7 +1323,7 @@ pub extern "LALR" const zig_grammar = struct {
     fn Expr(Expr: *Node, LParen: *Token, MaybeExprList: ?*NodeList, RParen: *Token) *Node {
         const node = try parser.createNode(Node.SuffixOp);
         node.lhs = arg1;
-        node.op = Node.SuffixOp.Op{ .Call = Node.SuffixOp.Op.Call{ .async_attr = null, .params = if (arg3) |p| p.* else NodeList.init(parser.allocator) } };
+        node.op = Node.SuffixOp.Op{ .Call = Node.SuffixOp.Op.Call{ .params = if (arg3) |p| p.* else NodeList.init(parser.allocator) } };
         node.rtoken = arg4;
         result = &node.base;
     }
@@ -1540,6 +1518,7 @@ pub extern "LALR" const zig_grammar = struct {
     fn MaybeFnCC(Keyword_nakedcc: *Token) ?*Token;
     fn MaybeFnCC(Keyword_stdcallcc: *Token) ?*Token;
     fn MaybeFnCC(Keyword_extern: *Token) ?*Token;
+    fn MaybeFnCC(Keyword_async: *Token) ?*Token;
 
     fn ParamDecl(MaybeNoalias: ?*Token, ParamType: *Node.ParamDecl) *Node.ParamDecl {
         result = arg2;

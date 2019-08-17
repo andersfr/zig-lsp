@@ -16,7 +16,7 @@ pub fn parseErrorToString(err: ParseError) []const u8 {
         .UnmatchedParen => "Unmatched (",
         .DiscardedLine => "Line discarded from parse (unrecoverable error)",
         .LCurlyExpectedLBrace => "Expected block found curly suffix initializer",
-        .DetachedAsync => "Async not attached to function call",
+        .AmpersandAmpersand => "Use and keyword",
         .AbortedParse => "Parse aborted due to previous errors",
     };
 }

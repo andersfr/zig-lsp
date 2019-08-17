@@ -3,6 +3,7 @@ const warn = std.debug.warn;
 
 const ZigParser = @import("zig/zig_parser.zig").Parser;
 const ZigNode = @import("zig/zig_parser.zig").Node;
+const Uri = @import("uri.zig");
 
 usingnamespace @import("json/json.zig");
 usingnamespace @import("errors.zig");
@@ -50,6 +51,7 @@ fn processSource(uri: []const u8, version: usize, source: []const u8) !void {
         try stream.print("\"{}\",\"diagnostics\":[", uri);
 
         if(parser.engine.errors.len > 0) {
+            var count: usize = 0;
             var eit = parser.engine.errors.iterator(0);
             // Diagnostic: { range, severity?: number, code?: number|string, source?: string, message: string, relatedInformation?: ... }
             while(eit.next()) |err| {
@@ -124,6 +126,9 @@ fn processJsonRpc(jsonrpc: Json) !bool {
         const version = document.v("version").u(0).?;
         const text = document.v("text").s("").?;
 
+        const path = try Uri.parse(allocator, uri);
+        defer allocator.free(path);
+
         try processSource(uri, version, text);
         return true;
     }
@@ -136,6 +141,9 @@ fn processJsonRpc(jsonrpc: Json) !bool {
         const version = document.v("version").u(0).?;
 
         const change = rpc_params.v("contentChanges").at(0);
+        const start = change.v("range").v("start");
+        // const changed_line = start.v("line").u(null);
+        // const changed_char = start.v("character").u(0).?;
         const text = change.v("text").s("").?;
 
         try processSource(uri, version, text);
@@ -200,6 +208,7 @@ fn processJsonRpc(jsonrpc: Json) !bool {
         // capabilities: ClientCapabilities{ ... }
         // trace: 'off'|'messages'|'verbose' (defaults to off)
         // workspaceFolders: WorkspaceFolder[]|null
+        const rootUri = rpc_params.v("rootUri").s(rpc_params.v("rootPath").s(null));
         return try sendGenericRpcResponse(rpc_id, initialize_response);
     }
     else if(std.mem.compare(u8, "initialized", rpc_method) == .Equal) {

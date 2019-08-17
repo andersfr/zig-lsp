@@ -215,7 +215,8 @@ const Engine = struct {
                 }
             }
             // Reduces
-            if (reduce_table[state].len > 0) {
+            // if (reduce_table[state].len > 0)
+            {
                 var reduce: i16 = 0;
                 // Key-Value pairs and default reduce
                 {

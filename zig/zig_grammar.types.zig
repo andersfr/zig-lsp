@@ -71,7 +71,6 @@ pub const Node = struct {
         ErrorTag,
         AsmInput,
         AsmOutput,
-        AsyncAttribute,
         ParamDecl,
         FieldInitializer,
 
@@ -491,36 +490,6 @@ pub const Node = struct {
         }
     };
 
-    pub const AsyncAttribute = struct {
-        base: Node,
-        async_token: TokenIndex,
-        allocator_type: ?*Node,
-        rangle_bracket: ?TokenIndex,
-
-        pub fn iterate(self: *AsyncAttribute, index: usize) ?*Node {
-            var i = index;
-
-            if (self.allocator_type) |allocator_type| {
-                if (i < 1) return allocator_type;
-                i -= 1;
-            }
-
-            return null;
-        }
-
-        pub fn firstToken(self: *const AsyncAttribute) TokenIndex {
-            return self.async_token;
-        }
-
-        pub fn lastToken(self: *const AsyncAttribute) TokenIndex {
-            if (self.rangle_bracket) |rangle_bracket| {
-                return rangle_bracket;
-            }
-
-            return self.async_token;
-        }
-    };
-
     pub const FnProto = struct {
         base: Node,
         doc_comments: ?*DocComment,
@@ -532,7 +501,6 @@ pub const Node = struct {
         var_args_token: ?TokenIndex,
         extern_export_inline_token: ?TokenIndex,
         cc_token: ?TokenIndex,
-        async_attr: ?*AsyncAttribute,
         body_node: ?*Node,
         lib_name: ?*Node, // populated if this is an extern declaration
         align_expr: ?*Node, // populated if align(A) is present
@@ -1227,6 +1195,7 @@ pub const Node = struct {
         pub const Op = union(enum) {
             AddressOf,
             ArrayType: *Node,
+            Async,
             Await,
             BitNot,
             BoolNot,
@@ -1352,7 +1321,6 @@ pub const Node = struct {
 
             pub const Call = struct {
                 params: ParamList,
-                async_attr: ?*AsyncAttribute,
 
                 pub const ParamList = NodeList;
             };

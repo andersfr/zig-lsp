@@ -13,6 +13,6 @@ pub const ParseError = enum {
     UnmatchedParen,
     DiscardedLine,
     LCurlyExpectedLBrace,
-    DetachedAsync,
+    AmpersandAmpersand,
     AbortedParse,
 };

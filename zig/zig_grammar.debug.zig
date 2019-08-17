@@ -4,6 +4,7 @@ pub fn idToString(id: Id) []const u8 {
     switch(id) {
         .Builtin                            => return "@builtin",
         .Ampersand                          => return "&",
+        .AmpersandAmpersand                 => return "&&",
         .AmpersandEqual                     => return "&=",
         .Asterisk                           => return "*",
         .AsteriskAsterisk                   => return "**",
