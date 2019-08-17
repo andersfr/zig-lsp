@@ -334,7 +334,7 @@ test "////" {
     testToken("////", .LineComment);
 }
 test "@builtin" {
-    testTokens("@builtin", [_]Id{.Builtin, .Identifier});
+    testTokens("@builtin", [_]Id{ .Builtin, .Identifier });
 }
 test "@\"identifier\"" {
     testToken("@\"identifier\"", .Identifier);

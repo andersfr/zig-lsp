@@ -1908,6 +1908,4 @@ pub const Node = struct {
             return self.token;
         }
     };
-
 };
-

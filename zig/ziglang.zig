@@ -654,14 +654,13 @@ pub extern "LALR" const zig_grammar = struct {
 
     // Grouped
     fn Expr(LParen: *Token, Expr: *Node, RParen: *Token) *Node {
-        if(arg2.id != .GroupedExpression) {
+        if (arg2.id != .GroupedExpression) {
             const node = try parser.createNode(Node.GroupedExpression);
             node.lparen = arg1;
             node.expr = arg2;
             node.rparen = arg3;
             result = &node.base;
-        }
-        else result = arg2;
+        } else result = arg2;
     }
 
     // Infix
@@ -1336,7 +1335,7 @@ pub extern "LALR" const zig_grammar = struct {
         node.kind_token = arg2;
         node.init_arg_expr = .None;
         node.lbrace_token = arg3;
-        node.fields_and_decls = if(arg4) |p| p.* else NodeList.init(parser.allocator);
+        node.fields_and_decls = if (arg4) |p| p.* else NodeList.init(parser.allocator);
         node.rbrace_token = arg5;
         result = &node.base;
     }
@@ -1346,7 +1345,7 @@ pub extern "LALR" const zig_grammar = struct {
         node.kind_token = arg2;
         node.init_arg_expr = Node.ContainerDecl.InitArg{ .Type = arg3 };
         node.lbrace_token = arg4;
-        node.fields_and_decls = if(arg5) |p| p.* else NodeList.init(parser.allocator);
+        node.fields_and_decls = if (arg5) |p| p.* else NodeList.init(parser.allocator);
         node.rbrace_token = arg6;
         result = &node.base;
     }
@@ -1356,7 +1355,7 @@ pub extern "LALR" const zig_grammar = struct {
         node.kind_token = arg2;
         node.init_arg_expr = Node.ContainerDecl.InitArg{ .Type = arg3 };
         node.lbrace_token = arg4;
-        node.fields_and_decls = if(arg5) |p| p.* else NodeList.init(parser.allocator);
+        node.fields_and_decls = if (arg5) |p| p.* else NodeList.init(parser.allocator);
         node.rbrace_token = arg6;
         result = &node.base;
     }
@@ -1366,7 +1365,7 @@ pub extern "LALR" const zig_grammar = struct {
         node.kind_token = arg2;
         node.init_arg_expr = Node.ContainerDecl.InitArg{ .Enum = arg3 };
         node.lbrace_token = arg4;
-        node.fields_and_decls = if(arg5) |p| p.* else NodeList.init(parser.allocator);
+        node.fields_and_decls = if (arg5) |p| p.* else NodeList.init(parser.allocator);
         node.rbrace_token = arg6;
         result = &node.base;
     }
@@ -1417,7 +1416,7 @@ pub extern "LALR" const zig_grammar = struct {
         node.asm_token = arg1;
         node.volatile_token = arg2;
         node.template = arg4;
-        node.outputs = if(arg5) |p| p.* else NodeList.init(parser.allocator);
+        node.outputs = if (arg5) |p| p.* else NodeList.init(parser.allocator);
         node.inputs = NodeList.init(parser.allocator);
         node.clobbers = NodeList.init(parser.allocator);
         node.rparen = arg6;
@@ -1428,8 +1427,8 @@ pub extern "LALR" const zig_grammar = struct {
         node.asm_token = arg1;
         node.volatile_token = arg2;
         node.template = arg4;
-        node.outputs = if(arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.inputs = if(arg6) |p| p.* else NodeList.init(parser.allocator);
+        node.outputs = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+        node.inputs = if (arg6) |p| p.* else NodeList.init(parser.allocator);
         node.clobbers = NodeList.init(parser.allocator);
         node.rparen = arg7;
         result = &node.base;
@@ -1439,14 +1438,16 @@ pub extern "LALR" const zig_grammar = struct {
         node.asm_token = arg1;
         node.volatile_token = arg2;
         node.template = arg4;
-        node.outputs = if(arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.inputs = if(arg6) |p| p.* else NodeList.init(parser.allocator);
-        node.clobbers = if(arg7) |p| p.* else NodeList.init(parser.allocator);
+        node.outputs = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+        node.inputs = if (arg6) |p| p.* else NodeList.init(parser.allocator);
+        node.clobbers = if (arg7) |p| p.* else NodeList.init(parser.allocator);
         node.rparen = arg8;
         result = &node.base;
     }
 
-    fn AsmOutput(Colon: *Token) ?*NodeList { result = null; }
+    fn AsmOutput(Colon: *Token) ?*NodeList {
+        result = null;
+    }
     fn AsmOutput(Colon: *Token, AsmOutputList: *NodeList) ?*NodeList {
         result = arg2;
     }

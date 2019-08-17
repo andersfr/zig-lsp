@@ -20,7 +20,7 @@ pub const StackValue = union(enum) {
 };
 
 pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state: i16) !TerminalId {
-    switch(rule) {
+    switch (rule) {
         1 => {
             // Symbol: Root
             var result: *Node = undefined;
@@ -31,16 +31,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Root);
-        node.doc_comments = arg1;
-        node.decls = if (arg2) |p| p.* else NodeList.init(parser.allocator);
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Root };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Root);
+                node.doc_comments = arg1;
+                node.decls = if (arg2) |p| p.* else NodeList.init(parser.allocator);
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Root };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Root;
         },
         2 => {
@@ -57,15 +57,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: DocCommentLines
             const arg1 = @intToPtr(?*TokenList, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.DocComment);
-        node.lines = arg1.*;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeDocComment };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.DocComment);
+                node.lines = arg1.*;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeDocComment };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeDocComment;
         },
         4 => {
@@ -78,14 +78,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg2);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .DocCommentLines };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg2);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .DocCommentLines };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.DocCommentLines;
         },
         5 => {
@@ -94,13 +94,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: DocComment
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithToken(TokenList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .DocCommentLines };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithToken(TokenList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .DocCommentLines };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.DocCommentLines;
         },
         6 => {
@@ -117,15 +117,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: RootDocCommentLines
             const arg1 = @intToPtr(?*TokenList, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.DocComment);
-        node.lines = arg1.*;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeRootDocComment };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.DocComment);
+                node.lines = arg1.*;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeRootDocComment };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeRootDocComment;
         },
         8 => {
@@ -138,14 +138,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg2);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .RootDocCommentLines };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg2);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .RootDocCommentLines };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.RootDocCommentLines;
         },
         9 => {
@@ -154,13 +154,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: RootDocComment
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithToken(TokenList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .RootDocCommentLines };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithToken(TokenList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .RootDocCommentLines };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.RootDocCommentLines;
         },
         10 => {
@@ -177,9 +177,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: ContainerMembers
             const arg1 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeContainerMembers };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeContainerMembers };
             return TerminalId.MaybeContainerMembers;
         },
         12 => {
@@ -192,14 +192,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg2);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerMembers };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg2);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerMembers };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerMembers;
         },
         13 => {
@@ -208,13 +208,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: ContainerMember
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithNode(NodeList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerMembers };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithNode(NodeList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerMembers };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerMembers;
         },
         14 => {
@@ -227,14 +227,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg2.base;
-        arg2.doc_comments = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerMember };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg2.base;
+                arg2.doc_comments = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerMember };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerMember;
         },
         15 => {
@@ -247,14 +247,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg2.base;
-        arg2.doc_comments = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerMember };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg2.base;
+                arg2.doc_comments = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerMember };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerMember;
         },
         16 => {
@@ -269,24 +269,24 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg3;
-        if (arg3.cast(Node.VarDecl)) |node| {
-            node.doc_comments = arg1;
-            node.visib_token = arg2;
-        } else if (arg3.cast(Node.FnProto)) |node| {
-            node.doc_comments = arg1;
-            node.visib_token = arg2;
-        } else {
-            const node = arg3.unsafe_cast(Node.Use);
-            node.doc_comments = arg1;
-            node.visib_token = arg2;
-        }
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerMember };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg3;
+                if (arg3.cast(Node.VarDecl)) |node| {
+                    node.doc_comments = arg1;
+                    node.visib_token = arg2;
+                } else if (arg3.cast(Node.FnProto)) |node| {
+                    node.doc_comments = arg1;
+                    node.visib_token = arg2;
+                } else {
+                    const node = arg3.unsafe_cast(Node.Use);
+                    node.doc_comments = arg1;
+                    node.visib_token = arg2;
+                }
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerMember };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerMember;
         },
         17 => {
@@ -303,16 +303,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg3;
-        const node = arg3.unsafe_cast(Node.ContainerField);
-        node.doc_comments = arg1;
-        node.visib_token = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerMember };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg3;
+                const node = arg3.unsafe_cast(Node.ContainerField);
+                node.doc_comments = arg1;
+                node.visib_token = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerMember };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerMember;
         },
         18 => {
@@ -327,19 +327,19 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.StringLiteral);
-        name.token = arg2;
-        const node = try parser.createNode(Node.TestDecl);
-        node.test_token = arg1;
-        node.name = &name.base;
-        node.body_node = &arg3.base;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TestDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.StringLiteral);
+                name.token = arg2;
+                const node = try parser.createNode(Node.TestDecl);
+                node.test_token = arg1;
+                node.name = &name.base;
+                node.body_node = &arg3.base;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TestDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TestDecl;
         },
         19 => {
@@ -352,16 +352,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Comptime);
-        node.comptime_token = arg1;
-        node.expr = arg2;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelComptime };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Comptime);
+                node.comptime_token = arg1;
+                node.expr = arg2;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelComptime };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelComptime;
         },
         20 => {
@@ -374,13 +374,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg1.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg1.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         21 => {
@@ -393,14 +393,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        arg1.body_node = &arg2.base;
-        result = &arg1.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                arg1.body_node = &arg2.base;
+                result = &arg1.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         22 => {
@@ -417,17 +417,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg3.base;
-        const lib_name = try parser.createNode(Node.StringLiteral);
-        lib_name.token = arg2;
-        arg3.extern_export_inline_token = arg1;
-        arg3.lib_name = &lib_name.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg3.base;
+                const lib_name = try parser.createNode(Node.StringLiteral);
+                lib_name.token = arg2;
+                arg3.extern_export_inline_token = arg1;
+                arg3.lib_name = &lib_name.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         23 => {
@@ -444,18 +444,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg3.base;
-        const lib_name = try parser.createNode(Node.StringLiteral);
-        lib_name.token = arg2;
-        arg3.extern_export_inline_token = arg1;
-        arg3.lib_name = &lib_name.base;
-        arg3.body_node = &arg4.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg3.base;
+                const lib_name = try parser.createNode(Node.StringLiteral);
+                lib_name.token = arg2;
+                arg3.extern_export_inline_token = arg1;
+                arg3.lib_name = &lib_name.base;
+                arg3.body_node = &arg4.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         24 => {
@@ -470,14 +470,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg2.base;
-        arg2.extern_export_inline_token = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg2.base;
+                arg2.extern_export_inline_token = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         25 => {
@@ -492,14 +492,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg2.base;
-        arg2.extern_export_inline_token = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg2.base;
+                arg2.extern_export_inline_token = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         26 => {
@@ -514,15 +514,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg2.base;
-        arg2.extern_export_inline_token = arg1;
-        arg2.body_node = &arg3.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg2.base;
+                arg2.extern_export_inline_token = arg1;
+                arg2.body_node = &arg3.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         27 => {
@@ -537,15 +537,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg2.base;
-        arg2.extern_export_inline_token = arg1;
-        arg2.body_node = &arg3.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg2.base;
+                arg2.extern_export_inline_token = arg1;
+                arg2.body_node = &arg3.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         28 => {
@@ -558,15 +558,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg2;
-        const node = arg2.unsafe_cast(Node.VarDecl);
-        node.thread_local_token = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg2;
+                const node = arg2.unsafe_cast(Node.VarDecl);
+                node.thread_local_token = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         29 => {
@@ -583,19 +583,19 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg4;
-        const lib_name = try parser.createNode(Node.StringLiteral);
-        lib_name.token = arg2;
-        const node = arg4.unsafe_cast(Node.VarDecl);
-        node.extern_export_token = arg1;
-        node.lib_name = &lib_name.base;
-        node.thread_local_token = arg3;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg4;
+                const lib_name = try parser.createNode(Node.StringLiteral);
+                lib_name.token = arg2;
+                const node = arg4.unsafe_cast(Node.VarDecl);
+                node.extern_export_token = arg1;
+                node.lib_name = &lib_name.base;
+                node.thread_local_token = arg3;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         30 => {
@@ -610,16 +610,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg3;
-        const node = arg3.unsafe_cast(Node.VarDecl);
-        node.extern_export_token = arg1;
-        node.thread_local_token = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg3;
+                const node = arg3.unsafe_cast(Node.VarDecl);
+                node.extern_export_token = arg1;
+                node.thread_local_token = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         31 => {
@@ -634,16 +634,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg3;
-        const node = arg3.unsafe_cast(Node.VarDecl);
-        node.extern_export_token = arg1;
-        node.thread_local_token = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg3;
+                const node = arg3.unsafe_cast(Node.VarDecl);
+                node.extern_export_token = arg1;
+                node.thread_local_token = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         32 => {
@@ -658,17 +658,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Use);
-        node.use_token = arg1;
-        node.expr = arg2;
-        node.semicolon_token = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Use);
+                node.use_token = arg1;
+                node.expr = arg2;
+                node.semicolon_token = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         33 => {
@@ -683,17 +683,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Use);
-        node.use_token = arg1;
-        node.expr = arg2;
-        node.semicolon_token = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .TopLevelDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Use);
+                node.use_token = arg1;
+                node.expr = arg2;
+                node.semicolon_token = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .TopLevelDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.TopLevelDecl;
         },
         34 => {
@@ -710,9 +710,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_threadlocal
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeThreadlocal };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeThreadlocal };
             return TerminalId.MaybeThreadlocal;
         },
         36 => {
@@ -739,21 +739,21 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 8;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.FnProto);
-        node.cc_token = arg1;
-        node.fn_token = arg2;
-        node.name_token = arg3;
-        node.params = if (arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.align_expr = arg7;
-        node.section_expr = arg8;
-        node.return_type = Node.FnProto.ReturnType{ .Explicit = arg9 };
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .FnProto };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.FnProto);
+                node.cc_token = arg1;
+                node.fn_token = arg2;
+                node.name_token = arg3;
+                node.params = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+                node.align_expr = arg7;
+                node.section_expr = arg8;
+                node.return_type = Node.FnProto.ReturnType{ .Explicit = arg9 };
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnProto };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.FnProto;
         },
         37 => {
@@ -782,21 +782,21 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 9;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.FnProto);
-        node.cc_token = arg1;
-        node.fn_token = arg2;
-        node.name_token = arg3;
-        node.params = if (arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.align_expr = arg7;
-        node.section_expr = arg8;
-        node.return_type = Node.FnProto.ReturnType{ .InferErrorSet = arg10 };
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .FnProto };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.FnProto);
+                node.cc_token = arg1;
+                node.fn_token = arg2;
+                node.name_token = arg3;
+                node.params = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+                node.align_expr = arg7;
+                node.section_expr = arg8;
+                node.return_type = Node.FnProto.ReturnType{ .InferErrorSet = arg10 };
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnProto };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.FnProto;
         },
         38 => {
@@ -823,23 +823,23 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 8;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const vnode = try parser.createNode(Node.VarType);
-        vnode.token = arg9;
-        const node = try parser.createNode(Node.FnProto);
-        node.cc_token = arg1;
-        node.fn_token = arg2;
-        node.name_token = arg3;
-        node.params = if (arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.align_expr = arg7;
-        node.section_expr = arg8;
-        node.return_type = Node.FnProto.ReturnType{ .Explicit = &vnode.base };
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .FnProto };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const vnode = try parser.createNode(Node.VarType);
+                vnode.token = arg9;
+                const node = try parser.createNode(Node.FnProto);
+                node.cc_token = arg1;
+                node.fn_token = arg2;
+                node.name_token = arg3;
+                node.params = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+                node.align_expr = arg7;
+                node.section_expr = arg8;
+                node.return_type = Node.FnProto.ReturnType{ .Explicit = &vnode.base };
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnProto };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.FnProto;
         },
         39 => {
@@ -868,23 +868,23 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 9;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const vnode = try parser.createNode(Node.VarType);
-        vnode.token = arg10;
-        const node = try parser.createNode(Node.FnProto);
-        node.cc_token = arg1;
-        node.fn_token = arg2;
-        node.name_token = arg3;
-        node.params = if (arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.align_expr = arg7;
-        node.section_expr = arg8;
-        node.return_type = Node.FnProto.ReturnType{ .InferErrorSet = &vnode.base };
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .FnProto };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const vnode = try parser.createNode(Node.VarType);
+                vnode.token = arg10;
+                const node = try parser.createNode(Node.FnProto);
+                node.cc_token = arg1;
+                node.fn_token = arg2;
+                node.name_token = arg3;
+                node.params = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+                node.align_expr = arg7;
+                node.section_expr = arg8;
+                node.return_type = Node.FnProto.ReturnType{ .InferErrorSet = &vnode.base };
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnProto };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.FnProto;
         },
         40 => {
@@ -907,21 +907,21 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 6;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.VarDecl);
-        node.mut_token = arg1;
-        node.name_token = arg2;
-        node.type_node = arg3;
-        node.align_node = arg4;
-        node.section_node = arg5;
-        node.init_node = arg6;
-        node.semicolon_token = arg7;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .VarDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.VarDecl);
+                node.mut_token = arg1;
+                node.name_token = arg2;
+                node.type_node = arg3;
+                node.align_node = arg4;
+                node.section_node = arg5;
+                node.init_node = arg6;
+                node.semicolon_token = arg7;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .VarDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.VarDecl;
         },
         41 => {
@@ -944,21 +944,21 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 6;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.VarDecl);
-        node.mut_token = arg1;
-        node.name_token = arg2;
-        node.type_node = arg3;
-        node.align_node = arg4;
-        node.section_node = arg5;
-        node.init_node = arg6;
-        node.semicolon_token = arg7;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .VarDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.VarDecl);
+                node.mut_token = arg1;
+                node.name_token = arg2;
+                node.type_node = arg3;
+                node.align_node = arg4;
+                node.section_node = arg5;
+                node.init_node = arg6;
+                node.semicolon_token = arg7;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .VarDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.VarDecl;
         },
         42 => {
@@ -973,17 +973,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ContainerField);
-        node.name_token = arg1;
-        node.type_expr = arg2;
-        node.value_expr = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerField };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ContainerField);
+                node.name_token = arg1;
+                node.type_expr = arg2;
+                node.value_expr = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerField };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerField;
         },
         43 => {
@@ -1000,9 +1000,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Statements
             const arg1 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeStatements };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeStatements };
             return TerminalId.MaybeStatements;
         },
         45 => {
@@ -1011,13 +1011,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Statement
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithNode(NodeList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statements };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithNode(NodeList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statements };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statements;
         },
         46 => {
@@ -1030,14 +1030,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg2);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statements };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg2);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statements };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statements;
         },
         47 => {
@@ -1050,16 +1050,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Comptime);
-        node.comptime_token = arg1;
-        node.expr = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Comptime);
+                node.comptime_token = arg1;
+                node.expr = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
         48 => {
@@ -1068,9 +1068,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: VarDecl
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
             return TerminalId.Statement;
         },
         49 => {
@@ -1083,16 +1083,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Comptime);
-        node.comptime_token = arg1;
-        node.expr = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Comptime);
+                node.comptime_token = arg1;
+                node.expr = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
         50 => {
@@ -1105,15 +1105,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Suspend);
-        node.suspend_token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Suspend);
+                node.suspend_token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
         51 => {
@@ -1126,16 +1126,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Suspend);
-        node.suspend_token = arg1;
-        node.body = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Suspend);
+                node.suspend_token = arg1;
+                node.body = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
         52 => {
@@ -1148,16 +1148,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Defer);
-        node.defer_token = arg1;
-        node.expr = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Defer);
+                node.defer_token = arg1;
+                node.expr = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
         53 => {
@@ -1170,16 +1170,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Defer);
-        node.defer_token = arg1;
-        node.expr = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Defer);
+                node.defer_token = arg1;
+                node.expr = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
         54 => {
@@ -1188,9 +1188,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: IfStatement
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
             return TerminalId.Statement;
         },
         55 => {
@@ -1203,14 +1203,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg2.base;
-        arg2.inline_token = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg2.base;
+                arg2.inline_token = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
         56 => {
@@ -1223,14 +1223,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg2.base;
-        arg2.inline_token = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg2.base;
+                arg2.inline_token = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
         57 => {
@@ -1239,9 +1239,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: LabeledStatement
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
             return TerminalId.Statement;
         },
         58 => {
@@ -1250,9 +1250,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: SwitchExpr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
             return TerminalId.Statement;
         },
         59 => {
@@ -1265,13 +1265,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Statement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
         60 => {
@@ -1284,14 +1284,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg1.base;
-        arg1.body = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .IfStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg1.base;
+                arg1.body = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .IfStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.IfStatement;
         },
         61 => {
@@ -1306,15 +1306,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg1.base;
-        arg1.body = arg2;
-        arg1.@"else" = arg3;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .IfStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg1.base;
+                arg1.body = arg2;
+                arg1.@"else" = arg3;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .IfStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.IfStatement;
         },
         62 => {
@@ -1329,14 +1329,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg1.base;
-        arg1.body = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .IfStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg1.base;
+                arg1.body = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .IfStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.IfStatement;
         },
         63 => {
@@ -1351,15 +1351,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg1.base;
-        arg1.body = arg2;
-        arg1.@"else" = arg3;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .IfStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg1.base;
+                arg1.body = arg2;
+                arg1.@"else" = arg3;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .IfStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.IfStatement;
         },
         64 => {
@@ -1374,17 +1374,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Else);
-        node.else_token = arg1;
-        node.payload = arg2;
-        node.body = arg3;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ElseStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Else);
+                node.else_token = arg1;
+                node.payload = arg2;
+                node.body = arg3;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ElseStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ElseStatement;
         },
         65 => {
@@ -1399,15 +1399,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg3.base;
-        arg3.label = arg1;
-        arg3.inline_token = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .LabeledStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg3.base;
+                arg3.label = arg1;
+                arg3.inline_token = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .LabeledStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.LabeledStatement;
         },
         66 => {
@@ -1422,15 +1422,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg3.base;
-        arg3.label = arg1;
-        arg3.inline_token = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .LabeledStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg3.base;
+                arg3.label = arg1;
+                arg3.inline_token = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .LabeledStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.LabeledStatement;
         },
         67 => {
@@ -1439,9 +1439,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: BlockExpr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .LabeledStatement };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .LabeledStatement };
             return TerminalId.LabeledStatement;
         },
         68 => {
@@ -1454,14 +1454,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        arg1.body = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ForStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                arg1.body = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ForStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ForStatement;
         },
         69 => {
@@ -1476,15 +1476,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        arg1.body = arg2;
-        arg1.@"else" = arg3;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ForStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                arg1.body = arg2;
+                arg1.@"else" = arg3;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ForStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ForStatement;
         },
         70 => {
@@ -1499,14 +1499,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        arg1.body = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ForStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                arg1.body = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ForStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ForStatement;
         },
         71 => {
@@ -1521,15 +1521,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        arg1.body = arg2;
-        arg1.@"else" = arg3;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ForStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                arg1.body = arg2;
+                arg1.@"else" = arg3;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ForStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ForStatement;
         },
         72 => {
@@ -1542,16 +1542,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Else);
-        node.else_token = arg1;
-        node.body = arg2;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ElseNoPayloadStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Else);
+                node.else_token = arg1;
+                node.body = arg2;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ElseNoPayloadStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ElseNoPayloadStatement;
         },
         73 => {
@@ -1564,14 +1564,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        arg1.body = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .WhileStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                arg1.body = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .WhileStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhileStatement;
         },
         74 => {
@@ -1586,15 +1586,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        arg1.body = arg2;
-        arg1.@"else" = arg3;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .WhileStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                arg1.body = arg2;
+                arg1.@"else" = arg3;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .WhileStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhileStatement;
         },
         75 => {
@@ -1609,14 +1609,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        arg1.body = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .WhileStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                arg1.body = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .WhileStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhileStatement;
         },
         76 => {
@@ -1631,15 +1631,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        arg1.body = arg2;
-        arg1.@"else" = arg3;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .WhileStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                arg1.body = arg2;
+                arg1.@"else" = arg3;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .WhileStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhileStatement;
         },
         77 => {
@@ -1648,9 +1648,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: BlockExpr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .BlockExprStatement };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .BlockExprStatement };
             return TerminalId.BlockExprStatement;
         },
         78 => {
@@ -1663,13 +1663,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .BlockExprStatement };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .BlockExprStatement };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.BlockExprStatement;
         },
         79 => {
@@ -1684,18 +1684,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignTimes;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignTimes;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         80 => {
@@ -1710,18 +1710,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignDiv;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignDiv;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         81 => {
@@ -1736,18 +1736,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignMod;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignMod;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         82 => {
@@ -1762,18 +1762,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignPlus;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignPlus;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         83 => {
@@ -1788,18 +1788,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignMinus;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignMinus;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         84 => {
@@ -1814,18 +1814,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignBitShiftLeft;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignBitShiftLeft;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         85 => {
@@ -1840,18 +1840,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignBitShiftRight;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignBitShiftRight;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         86 => {
@@ -1866,18 +1866,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignBitAnd;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignBitAnd;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         87 => {
@@ -1892,18 +1892,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignBitXor;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignBitXor;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         88 => {
@@ -1918,18 +1918,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignBitOr;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignBitOr;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         89 => {
@@ -1944,18 +1944,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignTimesWrap;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignTimesWrap;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         90 => {
@@ -1970,18 +1970,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignPlusWrap;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignPlusWrap;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         91 => {
@@ -1996,18 +1996,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AssignMinusWrap;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AssignMinusWrap;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         92 => {
@@ -2022,18 +2022,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .Assign;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .Assign;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
         93 => {
@@ -2042,9 +2042,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Expr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AssignExpr };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
             return TerminalId.AssignExpr;
         },
         94 => {
@@ -2065,13 +2065,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeEqualExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeEqualExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeEqualExpr;
         },
         96 => {
@@ -2080,15 +2080,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Recovery
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Recovery);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Recovery);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         97 => {
@@ -2103,20 +2103,19 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        if(arg2.id != .GroupedExpression) {
-            const node = try parser.createNode(Node.GroupedExpression);
-            node.lparen = arg1;
-            node.expr = arg2;
-            node.rparen = arg3;
-            result = &node.base;
-        }
-        else result = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                if (arg2.id != .GroupedExpression) {
+                    const node = try parser.createNode(Node.GroupedExpression);
+                    node.lparen = arg1;
+                    node.expr = arg2;
+                    node.rparen = arg3;
+                    result = &node.base;
+                } else result = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         98 => {
@@ -2131,18 +2130,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .UnwrapOptional;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .UnwrapOptional;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         99 => {
@@ -2159,18 +2158,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = Node.InfixOp.Op{ .Catch = arg3 };
-        node.rhs = arg4;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = Node.InfixOp.Op{ .Catch = arg3 };
+                node.rhs = arg4;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         100 => {
@@ -2185,18 +2184,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .BoolOr;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .BoolOr;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         101 => {
@@ -2211,19 +2210,19 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        try parser.reportError(ParseError.AmpersandAmpersand, arg2);
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .BoolAnd;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                try parser.reportError(ParseError.AmpersandAmpersand, arg2);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .BoolAnd;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         102 => {
@@ -2238,18 +2237,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .BoolAnd;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .BoolAnd;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         103 => {
@@ -2264,18 +2263,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .EqualEqual;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .EqualEqual;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         104 => {
@@ -2290,18 +2289,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .BangEqual;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .BangEqual;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         105 => {
@@ -2316,18 +2315,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .LessThan;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .LessThan;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         106 => {
@@ -2342,18 +2341,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .GreaterThan;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .GreaterThan;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         107 => {
@@ -2368,18 +2367,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .LessOrEqual;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .LessOrEqual;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         108 => {
@@ -2394,18 +2393,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .GreaterOrEqual;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .GreaterOrEqual;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         109 => {
@@ -2420,18 +2419,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .BitOr;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .BitOr;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         110 => {
@@ -2446,18 +2445,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .BitXor;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .BitXor;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         111 => {
@@ -2472,18 +2471,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .BitAnd;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .BitAnd;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         112 => {
@@ -2498,18 +2497,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .BitShiftLeft;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .BitShiftLeft;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         113 => {
@@ -2524,18 +2523,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .BitShiftRight;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .BitShiftRight;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         114 => {
@@ -2550,18 +2549,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .Add;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .Add;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         115 => {
@@ -2576,18 +2575,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .Sub;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .Sub;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         116 => {
@@ -2602,18 +2601,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .ArrayCat;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .ArrayCat;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         117 => {
@@ -2628,18 +2627,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .AddWrap;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .AddWrap;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         118 => {
@@ -2654,18 +2653,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .SubWrap;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .SubWrap;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         119 => {
@@ -2680,18 +2679,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .Div;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .Div;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         120 => {
@@ -2706,18 +2705,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .Div;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .Div;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         121 => {
@@ -2732,18 +2731,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .Mod;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .Mod;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         122 => {
@@ -2758,18 +2757,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .ArrayMult;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .ArrayMult;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         123 => {
@@ -2784,18 +2783,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .MultWrap;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .MultWrap;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         124 => {
@@ -2810,18 +2809,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .ErrorUnion;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .ErrorUnion;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         125 => {
@@ -2834,17 +2833,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = .BoolNot;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = .BoolNot;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         126 => {
@@ -2857,17 +2856,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = .Negation;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = .Negation;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         127 => {
@@ -2880,17 +2879,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = .NegationWrap;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = .NegationWrap;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         128 => {
@@ -2903,17 +2902,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = .BitNot;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = .BitNot;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         129 => {
@@ -2926,17 +2925,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = .AddressOf;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = .AddressOf;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         130 => {
@@ -2949,17 +2948,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = .Async;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = .Async;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         131 => {
@@ -2972,17 +2971,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = .Try;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = .Try;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         132 => {
@@ -2995,17 +2994,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = .Await;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = .Await;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         133 => {
@@ -3018,16 +3017,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Comptime);
-        node.comptime_token = arg1;
-        node.expr = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Comptime);
+                node.comptime_token = arg1;
+                node.expr = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         134 => {
@@ -3036,9 +3035,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: AsmExpr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
             return TerminalId.Expr;
         },
         135 => {
@@ -3051,17 +3050,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = .Resume;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = .Resume;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         136 => {
@@ -3074,17 +3073,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = .Cancel;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = .Cancel;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         137 => {
@@ -3093,16 +3092,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_break
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ControlFlowExpression);
-        node.ltoken = arg1;
-        node.kind = Node.ControlFlowExpression.Kind{ .Break = null };
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ControlFlowExpression);
+                node.ltoken = arg1;
+                node.kind = Node.ControlFlowExpression.Kind{ .Break = null };
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         138 => {
@@ -3115,16 +3114,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ControlFlowExpression);
-        node.ltoken = arg1;
-        node.kind = Node.ControlFlowExpression.Kind{ .Break = arg2 };
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ControlFlowExpression);
+                node.ltoken = arg1;
+                node.kind = Node.ControlFlowExpression.Kind{ .Break = arg2 };
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         139 => {
@@ -3137,17 +3136,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ControlFlowExpression);
-        node.ltoken = arg1;
-        node.kind = Node.ControlFlowExpression.Kind{ .Break = null };
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ControlFlowExpression);
+                node.ltoken = arg1;
+                node.kind = Node.ControlFlowExpression.Kind{ .Break = null };
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         140 => {
@@ -3162,17 +3161,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ControlFlowExpression);
-        node.ltoken = arg1;
-        node.kind = Node.ControlFlowExpression.Kind{ .Break = arg2 };
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ControlFlowExpression);
+                node.ltoken = arg1;
+                node.kind = Node.ControlFlowExpression.Kind{ .Break = arg2 };
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         141 => {
@@ -3181,16 +3180,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_continue
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ControlFlowExpression);
-        node.ltoken = arg1;
-        node.kind = Node.ControlFlowExpression.Kind{ .Continue = null };
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ControlFlowExpression);
+                node.ltoken = arg1;
+                node.kind = Node.ControlFlowExpression.Kind{ .Continue = null };
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         142 => {
@@ -3203,16 +3202,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ControlFlowExpression);
-        node.ltoken = arg1;
-        node.kind = Node.ControlFlowExpression.Kind{ .Continue = arg2 };
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ControlFlowExpression);
+                node.ltoken = arg1;
+                node.kind = Node.ControlFlowExpression.Kind{ .Continue = arg2 };
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         143 => {
@@ -3221,16 +3220,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_return
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ControlFlowExpression);
-        node.ltoken = arg1;
-        node.kind = .Return;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ControlFlowExpression);
+                node.ltoken = arg1;
+                node.kind = .Return;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         144 => {
@@ -3243,17 +3242,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ControlFlowExpression);
-        node.ltoken = arg1;
-        node.kind = .Return;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ControlFlowExpression);
+                node.ltoken = arg1;
+                node.kind = .Return;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         145 => {
@@ -3268,17 +3267,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.SuffixOp);
-        node.lhs = arg1;
-        node.op = Node.SuffixOp.Op{ .ArrayInitializer = NodeList.init(parser.allocator) };
-        node.rtoken = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.SuffixOp);
+                node.lhs = arg1;
+                node.op = Node.SuffixOp.Op{ .ArrayInitializer = NodeList.init(parser.allocator) };
+                node.rtoken = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         146 => {
@@ -3297,27 +3296,27 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 4;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.SuffixOp);
-        node.lhs = arg1;
-        node.op = init: {
-            if (arg3.at(0).cast(Node.InfixOp)) |infix| {
-                switch (infix.op) {
-                    // StructInitializer
-                    .Assign => break :init Node.SuffixOp.Op{ .StructInitializer = arg3.* },
-                    else => {},
-                }
+                const node = try parser.createNode(Node.SuffixOp);
+                node.lhs = arg1;
+                node.op = init: {
+                    if (arg3.at(0).cast(Node.InfixOp)) |infix| {
+                        switch (infix.op) {
+                            // StructInitializer
+                            .Assign => break :init Node.SuffixOp.Op{ .StructInitializer = arg3.* },
+                            else => {},
+                        }
+                    }
+                    // ArrayInitializer
+                    break :init Node.SuffixOp.Op{ .ArrayInitializer = arg3.* };
+                };
+                node.rtoken = arg5;
+                result = &node.base;
             }
-            // ArrayInitializer
-            break :init Node.SuffixOp.Op{ .ArrayInitializer = arg3.* };
-        };
-        node.rtoken = arg5;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         147 => {
@@ -3330,17 +3329,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = .OptionalType;
-        node.rhs = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = .OptionalType;
+                node.rhs = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         148 => {
@@ -3349,15 +3348,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_promise
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PromiseType);
-        node.promise_token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PromiseType);
+                node.promise_token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         149 => {
@@ -3372,16 +3371,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PromiseType);
-        node.promise_token = arg1;
-        node.result = Node.PromiseType.Result{ .arrow_token = arg2, .return_type = arg3 };
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PromiseType);
+                node.promise_token = arg1;
+                node.result = Node.PromiseType.Result{ .arrow_token = arg2, .return_type = arg3 };
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         150 => {
@@ -3398,17 +3397,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = Node.PrefixOp.Op{ .ArrayType = arg2 };
-        node.rhs = arg4;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = Node.PrefixOp.Op{ .ArrayType = arg2 };
+                node.rhs = arg4;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         151 => {
@@ -3431,17 +3430,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 6;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = Node.PrefixOp.Op{ .SliceType = Node.PrefixOp.PtrInfo{ .allowzero_token = arg3, .align_info = if (arg4) |p| p.* else null, .const_token = arg5, .volatile_token = arg6 } };
-        node.rhs = arg7;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = Node.PrefixOp.Op{ .SliceType = Node.PrefixOp.PtrInfo{ .allowzero_token = arg3, .align_info = if (arg4) |p| p.* else null, .const_token = arg5, .volatile_token = arg6 } };
+                node.rhs = arg7;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         152 => {
@@ -3462,17 +3461,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = Node.PrefixOp.Op{ .PtrType = Node.PrefixOp.PtrInfo{ .allowzero_token = arg2, .align_info = if (arg3) |p| p.* else null, .const_token = arg4, .volatile_token = arg5 } };
-        node.rhs = arg6;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = Node.PrefixOp.Op{ .PtrType = Node.PrefixOp.PtrInfo{ .allowzero_token = arg2, .align_info = if (arg3) |p| p.* else null, .const_token = arg4, .volatile_token = arg5 } };
+                node.rhs = arg6;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         153 => {
@@ -3493,22 +3492,22 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        arg1.id = .Asterisk;
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = Node.PrefixOp.Op{ .PtrType = Node.PrefixOp.PtrInfo{ .allowzero_token = arg2, .align_info = if (arg3) |p| p.* else null, .const_token = arg4, .volatile_token = arg5 } };
-        node.rhs = arg6;
-        const outer = try parser.createNode(Node.PrefixOp);
-        outer.op_token = arg1;
-        outer.op = Node.PrefixOp.Op{ .PtrType = Node.PrefixOp.PtrInfo{ .allowzero_token = null, .align_info = null, .const_token = null, .volatile_token = null } };
-        outer.rhs = &node.base;
-        result = &outer.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                arg1.id = .Asterisk;
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = Node.PrefixOp.Op{ .PtrType = Node.PrefixOp.PtrInfo{ .allowzero_token = arg2, .align_info = if (arg3) |p| p.* else null, .const_token = arg4, .volatile_token = arg5 } };
+                node.rhs = arg6;
+                const outer = try parser.createNode(Node.PrefixOp);
+                outer.op_token = arg1;
+                outer.op = Node.PrefixOp.Op{ .PtrType = Node.PrefixOp.PtrInfo{ .allowzero_token = null, .align_info = null, .const_token = null, .volatile_token = null } };
+                outer.rhs = &node.base;
+                result = &outer.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         154 => {
@@ -3529,17 +3528,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = Node.PrefixOp.Op{ .PtrType = Node.PrefixOp.PtrInfo{ .allowzero_token = arg2, .align_info = if (arg3) |p| p.* else null, .const_token = arg4, .volatile_token = arg5 } };
-        node.rhs = arg6;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = Node.PrefixOp.Op{ .PtrType = Node.PrefixOp.PtrInfo{ .allowzero_token = arg2, .align_info = if (arg3) |p| p.* else null, .const_token = arg4, .volatile_token = arg5 } };
+                node.rhs = arg6;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         155 => {
@@ -3560,17 +3559,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.PrefixOp);
-        node.op_token = arg1;
-        node.op = Node.PrefixOp.Op{ .PtrType = Node.PrefixOp.PtrInfo{ .allowzero_token = arg2, .align_info = if (arg3) |p| p.* else null, .const_token = arg4, .volatile_token = arg5 } };
-        node.rhs = arg6;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.PrefixOp);
+                node.op_token = arg1;
+                node.op = Node.PrefixOp.Op{ .PtrType = Node.PrefixOp.PtrInfo{ .allowzero_token = arg2, .align_info = if (arg3) |p| p.* else null, .const_token = arg4, .volatile_token = arg5 } };
+                node.rhs = arg6;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         156 => {
@@ -3579,9 +3578,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: BlockExpr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
             return TerminalId.Expr;
         },
         157 => {
@@ -3590,13 +3589,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Block
             const arg1 = @intToPtr(?*Node.Block, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg1.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .BlockExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg1.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .BlockExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.BlockExpr;
         },
         158 => {
@@ -3609,14 +3608,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg2.base;
-        arg2.label = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .BlockExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg2.base;
+                arg2.label = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .BlockExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.BlockExpr;
         },
         159 => {
@@ -3631,17 +3630,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Block);
-        node.lbrace = arg1;
-        node.statements = if (arg2) |p| p.* else NodeList.init(parser.allocator);
-        node.rbrace = arg3;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Block };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Block);
+                node.lbrace = arg1;
+                node.statements = if (arg2) |p| p.* else NodeList.init(parser.allocator);
+                node.rbrace = arg3;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Block };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Block;
         },
         160 => {
@@ -3654,13 +3653,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .BlockLabel };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .BlockLabel };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.BlockLabel;
         },
         161 => {
@@ -3675,18 +3674,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .ErrorUnion;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .ErrorUnion;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         162 => {
@@ -3695,15 +3694,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Identifier
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Identifier);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Identifier);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         163 => {
@@ -3712,15 +3711,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: CharLiteral
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.CharLiteral);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.CharLiteral);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         164 => {
@@ -3729,15 +3728,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: FloatLiteral
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.FloatLiteral);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.FloatLiteral);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         165 => {
@@ -3746,15 +3745,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: IntegerLiteral
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.IntegerLiteral);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.IntegerLiteral);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         166 => {
@@ -3763,15 +3762,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: StringLiteral
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.StringLiteral);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.StringLiteral);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         167 => {
@@ -3780,15 +3779,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: MultilineStringLiteral
             const arg1 = @intToPtr(?*TokenList, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.MultilineStringLiteral);
-        node.lines = arg1.*;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.MultilineStringLiteral);
+                node.lines = arg1.*;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         168 => {
@@ -3797,15 +3796,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: MultilineCStringLiteral
             const arg1 = @intToPtr(?*TokenList, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.MultilineStringLiteral);
-        node.lines = arg1.*;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.MultilineStringLiteral);
+                node.lines = arg1.*;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         169 => {
@@ -3818,16 +3817,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.EnumLiteral);
-        node.dot = arg1;
-        node.name = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.EnumLiteral);
+                node.dot = arg1;
+                node.name = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         170 => {
@@ -3842,22 +3841,22 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const err = try parser.createNode(Node.ErrorType);
-        err.token = arg1;
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg3;
-        const infix = try parser.createNode(Node.InfixOp);
-        infix.lhs = &err.base;
-        infix.op_token = arg2;
-        infix.op = .Period;
-        infix.rhs = &name.base;
-        result = &infix.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const err = try parser.createNode(Node.ErrorType);
+                err.token = arg1;
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg3;
+                const infix = try parser.createNode(Node.InfixOp);
+                infix.lhs = &err.base;
+                infix.op_token = arg2;
+                infix.op = .Period;
+                infix.rhs = &name.base;
+                result = &infix.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         171 => {
@@ -3872,17 +3871,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const error_set = try parser.createNode(Node.ErrorSetDecl);
-        error_set.error_token = arg1;
-        error_set.decls = NodeList.init(parser.allocator);
-        error_set.rbrace_token = arg3;
-        result = &error_set.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const error_set = try parser.createNode(Node.ErrorSetDecl);
+                error_set.error_token = arg1;
+                error_set.decls = NodeList.init(parser.allocator);
+                error_set.rbrace_token = arg3;
+                result = &error_set.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         172 => {
@@ -3901,17 +3900,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 4;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const error_set = try parser.createNode(Node.ErrorSetDecl);
-        error_set.error_token = arg1;
-        error_set.decls = arg3.*;
-        error_set.rbrace_token = arg5;
-        result = &error_set.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const error_set = try parser.createNode(Node.ErrorSetDecl);
+                error_set.error_token = arg1;
+                error_set.decls = arg3.*;
+                error_set.rbrace_token = arg5;
+                result = &error_set.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         173 => {
@@ -3920,15 +3919,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_false
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.BoolLiteral);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.BoolLiteral);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         174 => {
@@ -3937,15 +3936,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_true
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.BoolLiteral);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.BoolLiteral);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         175 => {
@@ -3954,15 +3953,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_null
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.NullLiteral);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.NullLiteral);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         176 => {
@@ -3971,15 +3970,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_undefined
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.UndefinedLiteral);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.UndefinedLiteral);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         177 => {
@@ -3988,15 +3987,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_unreachable
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Unreachable);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Unreachable);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         178 => {
@@ -4005,9 +4004,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: SwitchExpr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
             return TerminalId.Expr;
         },
         179 => {
@@ -4020,14 +4019,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg1.base;
-        arg1.body = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg1.base;
+                arg1.body = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         180 => {
@@ -4046,19 +4045,19 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 4;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg1.base;
-        const node = try parser.createNode(Node.Else);
-        node.else_token = arg3;
-        node.payload = arg4;
-        node.body = arg5;
-        arg1.body = arg2;
-        arg1.@"else" = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg1.base;
+                const node = try parser.createNode(Node.Else);
+                node.else_token = arg3;
+                node.payload = arg4;
+                node.body = arg5;
+                arg1.body = arg2;
+                arg1.@"else" = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         181 => {
@@ -4075,17 +4074,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.BuiltinCall);
-        node.builtin_token = arg1;
-        node.params = if (arg3) |p| p.* else NodeList.init(parser.allocator);
-        node.rparen_token = arg4;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.BuiltinCall);
+                node.builtin_token = arg1;
+                node.params = if (arg3) |p| p.* else NodeList.init(parser.allocator);
+                node.rparen_token = arg4;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         182 => {
@@ -4094,13 +4093,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: FnProto
             const arg1 = @intToPtr(?*Node.FnProto, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg1.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg1.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         183 => {
@@ -4117,17 +4116,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.SuffixOp);
-        node.lhs = arg1;
-        node.op = Node.SuffixOp.Op{ .ArrayAccess = arg3 };
-        node.rtoken = arg4;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.SuffixOp);
+                node.lhs = arg1;
+                node.op = Node.SuffixOp.Op{ .ArrayAccess = arg3 };
+                node.rtoken = arg4;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         184 => {
@@ -4146,17 +4145,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 4;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.SuffixOp);
-        node.lhs = arg1;
-        node.op = Node.SuffixOp.Op{ .Slice = Node.SuffixOp.Op.Slice{ .start = arg3, .end = null } };
-        node.rtoken = arg5;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.SuffixOp);
+                node.lhs = arg1;
+                node.op = Node.SuffixOp.Op{ .Slice = Node.SuffixOp.Op.Slice{ .start = arg3, .end = null } };
+                node.rtoken = arg5;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         185 => {
@@ -4177,17 +4176,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.SuffixOp);
-        node.lhs = arg1;
-        node.op = Node.SuffixOp.Op{ .Slice = Node.SuffixOp.Op.Slice{ .start = arg3, .end = arg5 } };
-        node.rtoken = arg6;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.SuffixOp);
+                node.lhs = arg1;
+                node.op = Node.SuffixOp.Op{ .Slice = Node.SuffixOp.Op.Slice{ .start = arg3, .end = arg5 } };
+                node.rtoken = arg6;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         186 => {
@@ -4202,20 +4201,20 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg3;
-        const infix = try parser.createNode(Node.InfixOp);
-        infix.lhs = arg1;
-        infix.op_token = arg2;
-        infix.op = .Period;
-        infix.rhs = &name.base;
-        result = &infix.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg3;
+                const infix = try parser.createNode(Node.InfixOp);
+                infix.lhs = arg1;
+                infix.op_token = arg2;
+                infix.op = .Period;
+                infix.rhs = &name.base;
+                result = &infix.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         187 => {
@@ -4228,17 +4227,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.SuffixOp);
-        node.lhs = arg1;
-        node.op = .Deref;
-        node.rtoken = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.SuffixOp);
+                node.lhs = arg1;
+                node.op = .Deref;
+                node.rtoken = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         188 => {
@@ -4251,17 +4250,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.SuffixOp);
-        node.lhs = arg1;
-        node.op = .UnwrapOptional;
-        node.rtoken = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.SuffixOp);
+                node.lhs = arg1;
+                node.op = .UnwrapOptional;
+                node.rtoken = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         189 => {
@@ -4278,17 +4277,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.SuffixOp);
-        node.lhs = arg1;
-        node.op = Node.SuffixOp.Op{ .Call = Node.SuffixOp.Op.Call{ .params = if (arg3) |p| p.* else NodeList.init(parser.allocator) } };
-        node.rtoken = arg4;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.SuffixOp);
+                node.lhs = arg1;
+                node.op = Node.SuffixOp.Op{ .Call = Node.SuffixOp.Op.Call{ .params = if (arg3) |p| p.* else NodeList.init(parser.allocator) } };
+                node.rtoken = arg4;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
         190 => {
@@ -4297,9 +4296,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: ContainerDecl
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .Expr };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
             return TerminalId.Expr;
         },
         191 => {
@@ -4318,20 +4317,20 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 4;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ContainerDecl);
-        node.layout_token = arg1;
-        node.kind_token = arg2;
-        node.init_arg_expr = .None;
-        node.lbrace_token = arg3;
-        node.fields_and_decls = if(arg4) |p| p.* else NodeList.init(parser.allocator);
-        node.rbrace_token = arg5;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ContainerDecl);
+                node.layout_token = arg1;
+                node.kind_token = arg2;
+                node.init_arg_expr = .None;
+                node.lbrace_token = arg3;
+                node.fields_and_decls = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+                node.rbrace_token = arg5;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDecl;
         },
         192 => {
@@ -4352,20 +4351,20 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ContainerDecl);
-        node.layout_token = arg1;
-        node.kind_token = arg2;
-        node.init_arg_expr = Node.ContainerDecl.InitArg{ .Type = arg3 };
-        node.lbrace_token = arg4;
-        node.fields_and_decls = if(arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.rbrace_token = arg6;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ContainerDecl);
+                node.layout_token = arg1;
+                node.kind_token = arg2;
+                node.init_arg_expr = Node.ContainerDecl.InitArg{ .Type = arg3 };
+                node.lbrace_token = arg4;
+                node.fields_and_decls = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+                node.rbrace_token = arg6;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDecl;
         },
         193 => {
@@ -4386,20 +4385,20 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ContainerDecl);
-        node.layout_token = arg1;
-        node.kind_token = arg2;
-        node.init_arg_expr = Node.ContainerDecl.InitArg{ .Type = arg3 };
-        node.lbrace_token = arg4;
-        node.fields_and_decls = if(arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.rbrace_token = arg6;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ContainerDecl);
+                node.layout_token = arg1;
+                node.kind_token = arg2;
+                node.init_arg_expr = Node.ContainerDecl.InitArg{ .Type = arg3 };
+                node.lbrace_token = arg4;
+                node.fields_and_decls = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+                node.rbrace_token = arg6;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDecl;
         },
         194 => {
@@ -4420,20 +4419,20 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ContainerDecl);
-        node.layout_token = arg1;
-        node.kind_token = arg2;
-        node.init_arg_expr = Node.ContainerDecl.InitArg{ .Enum = arg3 };
-        node.lbrace_token = arg4;
-        node.fields_and_decls = if(arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.rbrace_token = arg6;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ContainerDecl);
+                node.layout_token = arg1;
+                node.kind_token = arg2;
+                node.init_arg_expr = Node.ContainerDecl.InitArg{ .Enum = arg3 };
+                node.lbrace_token = arg4;
+                node.fields_and_decls = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+                node.rbrace_token = arg6;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDecl;
         },
         195 => {
@@ -4450,9 +4449,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_extern
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeExternPacked };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeExternPacked };
             return TerminalId.MaybeExternPacked;
         },
         197 => {
@@ -4461,9 +4460,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_packed
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeExternPacked };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeExternPacked };
             return TerminalId.MaybeExternPacked;
         },
         198 => {
@@ -4488,18 +4487,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 7;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Switch);
-        node.switch_token = arg1;
-        node.expr = arg3;
-        node.cases = arg6.*;
-        node.rbrace = arg8;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .SwitchExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Switch);
+                node.switch_token = arg1;
+                node.expr = arg3;
+                node.cases = arg6.*;
+                node.rbrace = arg8;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchExpr;
         },
         199 => {
@@ -4508,15 +4507,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: StringLiteral
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.StringLiteral);
-        node.token = arg1;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .String };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.StringLiteral);
+                node.token = arg1;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .String };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.String;
         },
         200 => {
@@ -4525,15 +4524,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: MultilineStringLiteral
             const arg1 = @intToPtr(?*TokenList, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.MultilineStringLiteral);
-        node.lines = arg1.*;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .String };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.MultilineStringLiteral);
+                node.lines = arg1.*;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .String };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.String;
         },
         201 => {
@@ -4542,15 +4541,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: MultilineCStringLiteral
             const arg1 = @intToPtr(?*TokenList, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.MultilineStringLiteral);
-        node.lines = arg1.*;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .String };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.MultilineStringLiteral);
+                node.lines = arg1.*;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .String };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.String;
         },
         202 => {
@@ -4569,21 +4568,21 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 4;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Asm);
-        node.asm_token = arg1;
-        node.volatile_token = arg2;
-        node.template = arg4;
-        node.outputs = NodeList.init(parser.allocator);
-        node.inputs = NodeList.init(parser.allocator);
-        node.clobbers = NodeList.init(parser.allocator);
-        node.rparen = arg5;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Asm);
+                node.asm_token = arg1;
+                node.volatile_token = arg2;
+                node.template = arg4;
+                node.outputs = NodeList.init(parser.allocator);
+                node.inputs = NodeList.init(parser.allocator);
+                node.clobbers = NodeList.init(parser.allocator);
+                node.rparen = arg5;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmExpr;
         },
         203 => {
@@ -4604,21 +4603,21 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Asm);
-        node.asm_token = arg1;
-        node.volatile_token = arg2;
-        node.template = arg4;
-        node.outputs = if(arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.inputs = NodeList.init(parser.allocator);
-        node.clobbers = NodeList.init(parser.allocator);
-        node.rparen = arg6;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Asm);
+                node.asm_token = arg1;
+                node.volatile_token = arg2;
+                node.template = arg4;
+                node.outputs = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+                node.inputs = NodeList.init(parser.allocator);
+                node.clobbers = NodeList.init(parser.allocator);
+                node.rparen = arg6;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmExpr;
         },
         204 => {
@@ -4641,21 +4640,21 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 6;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Asm);
-        node.asm_token = arg1;
-        node.volatile_token = arg2;
-        node.template = arg4;
-        node.outputs = if(arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.inputs = if(arg6) |p| p.* else NodeList.init(parser.allocator);
-        node.clobbers = NodeList.init(parser.allocator);
-        node.rparen = arg7;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Asm);
+                node.asm_token = arg1;
+                node.volatile_token = arg2;
+                node.template = arg4;
+                node.outputs = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+                node.inputs = if (arg6) |p| p.* else NodeList.init(parser.allocator);
+                node.clobbers = NodeList.init(parser.allocator);
+                node.rparen = arg7;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmExpr;
         },
         205 => {
@@ -4680,21 +4679,21 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 7;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Asm);
-        node.asm_token = arg1;
-        node.volatile_token = arg2;
-        node.template = arg4;
-        node.outputs = if(arg5) |p| p.* else NodeList.init(parser.allocator);
-        node.inputs = if(arg6) |p| p.* else NodeList.init(parser.allocator);
-        node.clobbers = if(arg7) |p| p.* else NodeList.init(parser.allocator);
-        node.rparen = arg8;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Asm);
+                node.asm_token = arg1;
+                node.volatile_token = arg2;
+                node.template = arg4;
+                node.outputs = if (arg5) |p| p.* else NodeList.init(parser.allocator);
+                node.inputs = if (arg6) |p| p.* else NodeList.init(parser.allocator);
+                node.clobbers = if (arg7) |p| p.* else NodeList.init(parser.allocator);
+                node.rparen = arg8;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmExpr;
         },
         206 => {
@@ -4703,11 +4702,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Colon
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            { result = null; }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmOutput };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                result = null;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmOutput };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmOutput;
         },
         207 => {
@@ -4720,13 +4721,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmOutput };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmOutput };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmOutput;
         },
         208 => {
@@ -4749,23 +4750,23 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 6;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg2;
-        const variable = try parser.createNode(Node.Identifier);
-        variable.token = arg6;
-        const node = try parser.createNode(Node.AsmOutput);
-        node.lbracket = arg1;
-        node.symbolic_name = &name.base;
-        node.constraint = arg4;
-        node.kind = Node.AsmOutput.Kind{ .Variable = variable };
-        node.rparen = arg7;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmOutputItem };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg2;
+                const variable = try parser.createNode(Node.Identifier);
+                variable.token = arg6;
+                const node = try parser.createNode(Node.AsmOutput);
+                node.lbracket = arg1;
+                node.symbolic_name = &name.base;
+                node.constraint = arg4;
+                node.kind = Node.AsmOutput.Kind{ .Variable = variable };
+                node.rparen = arg7;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmOutputItem };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmOutputItem;
         },
         209 => {
@@ -4790,21 +4791,21 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 7;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg2;
-        const node = try parser.createNode(Node.AsmOutput);
-        node.lbracket = arg1;
-        node.symbolic_name = &name.base;
-        node.constraint = arg4;
-        node.kind = Node.AsmOutput.Kind{ .Return = arg7 };
-        node.rparen = arg8;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmOutputItem };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg2;
+                const node = try parser.createNode(Node.AsmOutput);
+                node.lbracket = arg1;
+                node.symbolic_name = &name.base;
+                node.constraint = arg4;
+                node.kind = Node.AsmOutput.Kind{ .Return = arg7 };
+                node.rparen = arg8;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmOutputItem };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmOutputItem;
         },
         210 => {
@@ -4813,13 +4814,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Colon
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = null;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmInput };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = null;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmInput };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmInput;
         },
         211 => {
@@ -4832,13 +4833,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmInput };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmInput };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmInput;
         },
         212 => {
@@ -4861,21 +4862,21 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 6;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg2;
-        const node = try parser.createNode(Node.AsmInput);
-        node.lbracket = arg1;
-        node.symbolic_name = &name.base;
-        node.constraint = arg4;
-        node.expr = arg6;
-        node.rparen = arg7;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmInputItem };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg2;
+                const node = try parser.createNode(Node.AsmInput);
+                node.lbracket = arg1;
+                node.symbolic_name = &name.base;
+                node.constraint = arg4;
+                node.expr = arg6;
+                node.rparen = arg7;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmInputItem };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmInputItem;
         },
         213 => {
@@ -4884,13 +4885,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Colon
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = null;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmClobber };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = null;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmClobber };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmClobber;
         },
         214 => {
@@ -4903,13 +4904,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmClobber };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmClobber };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmClobber;
         },
         215 => {
@@ -4922,15 +4923,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Identifier);
-        node.token = arg2;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .BreakLabel };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Identifier);
+                node.token = arg2;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .BreakLabel };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.BreakLabel;
         },
         216 => {
@@ -4955,13 +4956,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg3;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeLinkSection };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg3;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeLinkSection };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeLinkSection;
         },
         218 => {
@@ -4978,9 +4979,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_nakedcc
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeFnCC };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeFnCC };
             return TerminalId.MaybeFnCC;
         },
         220 => {
@@ -4989,9 +4990,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_stdcallcc
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeFnCC };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeFnCC };
             return TerminalId.MaybeFnCC;
         },
         221 => {
@@ -5000,9 +5001,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_extern
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeFnCC };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeFnCC };
             return TerminalId.MaybeFnCC;
         },
         222 => {
@@ -5011,9 +5012,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_async
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeFnCC };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeFnCC };
             return TerminalId.MaybeFnCC;
         },
         223 => {
@@ -5026,14 +5027,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg2;
-        arg2.noalias_token = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ParamDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg2;
+                arg2.noalias_token = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ParamDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamDecl;
         },
         224 => {
@@ -5050,15 +5051,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg4;
-        arg4.noalias_token = arg1;
-        arg4.name_token = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ParamDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg4;
+                arg4.noalias_token = arg1;
+                arg4.name_token = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ParamDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamDecl;
         },
         225 => {
@@ -5077,16 +5078,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 4;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg5;
-        arg5.noalias_token = arg1;
-        arg5.comptime_token = arg2;
-        arg5.name_token = arg3;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ParamDecl };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg5;
+                arg5.noalias_token = arg1;
+                arg5.comptime_token = arg2;
+                arg5.name_token = arg3;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ParamDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamDecl;
         },
         226 => {
@@ -5095,17 +5096,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_var
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const vtype = try parser.createNode(Node.VarType);
-        vtype.token = arg1;
-        const node = try parser.createNode(Node.ParamDecl);
-        node.type_node = &vtype.base;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ParamType };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const vtype = try parser.createNode(Node.VarType);
+                vtype.token = arg1;
+                const node = try parser.createNode(Node.ParamDecl);
+                node.type_node = &vtype.base;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ParamType };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamType;
         },
         227 => {
@@ -5114,15 +5115,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Ellipsis3
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ParamDecl);
-        node.var_args_token = arg1;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ParamType };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ParamDecl);
+                node.var_args_token = arg1;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ParamType };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamType;
         },
         228 => {
@@ -5131,15 +5132,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Expr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ParamDecl);
-        node.type_node = arg1;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ParamType };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ParamDecl);
+                node.type_node = arg1;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ParamType };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamType;
         },
         229 => {
@@ -5158,17 +5159,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 4;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.If);
-        node.if_token = arg1;
-        node.condition = arg3;
-        node.payload = arg5;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .IfPrefix };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.If);
+                node.if_token = arg1;
+                node.condition = arg3;
+                node.payload = arg5;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .IfPrefix };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.IfPrefix;
         },
         230 => {
@@ -5187,17 +5188,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 4;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.For);
-        node.for_token = arg1;
-        node.array_expr = arg3;
-        node.payload = arg5;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ForPrefix };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.For);
+                node.for_token = arg1;
+                node.array_expr = arg3;
+                node.payload = arg5;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ForPrefix };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ForPrefix;
         },
         231 => {
@@ -5216,17 +5217,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 4;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.While);
-        node.while_token = arg1;
-        node.condition = arg3;
-        node.payload = arg5;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .WhilePrefix };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.While);
+                node.while_token = arg1;
+                node.condition = arg3;
+                node.payload = arg5;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .WhilePrefix };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhilePrefix;
         },
         232 => {
@@ -5253,18 +5254,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 8;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.While);
-        node.while_token = arg1;
-        node.condition = arg3;
-        node.payload = arg5;
-        node.continue_expr = arg8;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .WhilePrefix };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.While);
+                node.while_token = arg1;
+                node.condition = arg3;
+                node.payload = arg5;
+                node.continue_expr = arg8;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .WhilePrefix };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhilePrefix;
         },
         233 => {
@@ -5287,19 +5288,19 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg2;
-        const node = try parser.createNode(Node.Payload);
-        node.lpipe = arg1;
-        node.error_symbol = &name.base;
-        node.rpipe = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybePayload };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg2;
+                const node = try parser.createNode(Node.Payload);
+                node.lpipe = arg1;
+                node.error_symbol = &name.base;
+                node.rpipe = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybePayload };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybePayload;
         },
         235 => {
@@ -5322,19 +5323,19 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg2;
-        const node = try parser.createNode(Node.PointerPayload);
-        node.lpipe = arg1;
-        node.value_symbol = &name.base;
-        node.rpipe = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybePtrPayload };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg2;
+                const node = try parser.createNode(Node.PointerPayload);
+                node.lpipe = arg1;
+                node.value_symbol = &name.base;
+                node.rpipe = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybePtrPayload };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybePtrPayload;
         },
         237 => {
@@ -5351,20 +5352,20 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg3;
-        const node = try parser.createNode(Node.PointerPayload);
-        node.lpipe = arg1;
-        node.ptr_token = arg2;
-        node.value_symbol = &name.base;
-        node.rpipe = arg4;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybePtrPayload };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg3;
+                const node = try parser.createNode(Node.PointerPayload);
+                node.lpipe = arg1;
+                node.ptr_token = arg2;
+                node.value_symbol = &name.base;
+                node.rpipe = arg4;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybePtrPayload };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybePtrPayload;
         },
         238 => {
@@ -5379,19 +5380,19 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg2;
-        const node = try parser.createNode(Node.PointerIndexPayload);
-        node.lpipe = arg1;
-        node.value_symbol = &name.base;
-        node.rpipe = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .PtrIndexPayload };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg2;
+                const node = try parser.createNode(Node.PointerIndexPayload);
+                node.lpipe = arg1;
+                node.value_symbol = &name.base;
+                node.rpipe = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .PtrIndexPayload };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.PtrIndexPayload;
         },
         239 => {
@@ -5408,20 +5409,20 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg3;
-        const node = try parser.createNode(Node.PointerIndexPayload);
-        node.lpipe = arg1;
-        node.ptr_token = arg2;
-        node.value_symbol = &name.base;
-        node.rpipe = arg4;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .PtrIndexPayload };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg3;
+                const node = try parser.createNode(Node.PointerIndexPayload);
+                node.lpipe = arg1;
+                node.ptr_token = arg2;
+                node.value_symbol = &name.base;
+                node.rpipe = arg4;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .PtrIndexPayload };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.PtrIndexPayload;
         },
         240 => {
@@ -5440,22 +5441,22 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 4;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg2;
-        const index = try parser.createNode(Node.Identifier);
-        index.token = arg4;
-        const node = try parser.createNode(Node.PointerIndexPayload);
-        node.lpipe = arg1;
-        node.value_symbol = &name.base;
-        node.index_symbol = &index.base;
-        node.rpipe = arg5;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .PtrIndexPayload };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg2;
+                const index = try parser.createNode(Node.Identifier);
+                index.token = arg4;
+                const node = try parser.createNode(Node.PointerIndexPayload);
+                node.lpipe = arg1;
+                node.value_symbol = &name.base;
+                node.index_symbol = &index.base;
+                node.rpipe = arg5;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .PtrIndexPayload };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.PtrIndexPayload;
         },
         241 => {
@@ -5476,23 +5477,23 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const name = try parser.createNode(Node.Identifier);
-        name.token = arg3;
-        const index = try parser.createNode(Node.Identifier);
-        index.token = arg5;
-        const node = try parser.createNode(Node.PointerIndexPayload);
-        node.lpipe = arg1;
-        node.ptr_token = arg2;
-        node.value_symbol = &name.base;
-        node.index_symbol = &index.base;
-        node.rpipe = arg6;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .PtrIndexPayload };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const name = try parser.createNode(Node.Identifier);
+                name.token = arg3;
+                const index = try parser.createNode(Node.Identifier);
+                index.token = arg5;
+                const node = try parser.createNode(Node.PointerIndexPayload);
+                node.lpipe = arg1;
+                node.ptr_token = arg2;
+                node.value_symbol = &name.base;
+                node.index_symbol = &index.base;
+                node.rpipe = arg6;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .PtrIndexPayload };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.PtrIndexPayload;
         },
         242 => {
@@ -5509,16 +5510,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = &arg1.base;
-        arg1.arrow_token = arg2;
-        arg1.payload = arg3;
-        arg1.expr = arg4;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .SwitchProng };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = &arg1.base;
+                arg1.arrow_token = arg2;
+                arg1.payload = arg3;
+                arg1.expr = arg4;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchProng };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchProng;
         },
         243 => {
@@ -5527,18 +5528,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_else
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const else_node = try parser.createNode(Node.SwitchElse);
-        else_node.token = arg1;
-        const node = try parser.createNode(Node.SwitchCase);
-        node.items = NodeList.init(parser.allocator);
-        try node.items.append(&else_node.base);
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .SwitchCase };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const else_node = try parser.createNode(Node.SwitchElse);
+                else_node.token = arg1;
+                const node = try parser.createNode(Node.SwitchCase);
+                node.items = NodeList.init(parser.allocator);
+                try node.items.append(&else_node.base);
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchCase };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchCase;
         },
         244 => {
@@ -5551,15 +5552,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.SwitchCase);
-        node.items = arg1.*;
-        result = node;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .SwitchCase };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.SwitchCase);
+                node.items = arg1.*;
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchCase };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchCase;
         },
         245 => {
@@ -5568,13 +5569,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: SwitchItem
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithNode(NodeList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .SwitchItems };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithNode(NodeList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchItems };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchItems;
         },
         246 => {
@@ -5589,14 +5590,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg3);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .SwitchItems };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg3);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchItems };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchItems;
         },
         247 => {
@@ -5605,9 +5606,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Expr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .SwitchItem };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchItem };
             return TerminalId.SwitchItem;
         },
         248 => {
@@ -5622,18 +5623,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.InfixOp);
-        node.lhs = arg1;
-        node.op_token = arg2;
-        node.op = .Range;
-        node.rhs = arg3;
-        result = &node.base;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .SwitchItem };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.InfixOp);
+                node.lhs = arg1;
+                node.op_token = arg2;
+                node.op = .Range;
+                node.rhs = arg3;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchItem };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchItem;
         },
         249 => {
@@ -5650,9 +5651,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_volatile
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeVolatile };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeVolatile };
             return TerminalId.MaybeVolatile;
         },
         251 => {
@@ -5669,9 +5670,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_allowzero
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeAllowzero };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeAllowzero };
             return TerminalId.MaybeAllowzero;
         },
         253 => {
@@ -5686,10 +5687,10 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerDeclTypeEnum };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDeclTypeEnum };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDeclTypeEnum;
         },
         254 => {
@@ -5710,13 +5711,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg4;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerDeclTypeEnum };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg4;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDeclTypeEnum };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDeclTypeEnum;
         },
         255 => {
@@ -5731,13 +5732,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerDeclTypeType };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDeclTypeType };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDeclTypeType;
         },
         256 => {
@@ -5746,9 +5747,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_struct
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerDeclOp };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDeclOp };
             return TerminalId.ContainerDeclOp;
         },
         257 => {
@@ -5757,9 +5758,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_union
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerDeclOp };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDeclOp };
             return TerminalId.ContainerDeclOp;
         },
         258 => {
@@ -5768,9 +5769,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_enum
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ContainerDeclOp };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDeclOp };
             return TerminalId.ContainerDeclOp;
         },
         259 => {
@@ -5795,13 +5796,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg3;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeByteAlign };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg3;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeByteAlign };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeByteAlign;
         },
         261 => {
@@ -5826,15 +5827,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const value = try parser.createTemporary(Node.PrefixOp.PtrInfo.Align);
-        value.node = arg3;
-        result = value;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeAlign };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const value = try parser.createTemporary(Node.PrefixOp.PtrInfo.Align);
+                value.node = arg3;
+                result = value;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeAlign };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeAlign;
         },
         263 => {
@@ -5859,20 +5860,20 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 7;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const start = try parser.createNode(Node.IntegerLiteral);
-        start.token = arg5;
-        const end = try parser.createNode(Node.IntegerLiteral);
-        end.token = arg7;
-        const value = try parser.createTemporary(Node.PrefixOp.PtrInfo.Align);
-        value.node = arg3;
-        value.bit_range = Node.PrefixOp.PtrInfo.Align.BitRange{ .start = &start.base, .end = &end.base };
-        result = value;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeAlign };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const start = try parser.createNode(Node.IntegerLiteral);
+                start.token = arg5;
+                const end = try parser.createNode(Node.IntegerLiteral);
+                end.token = arg7;
+                const value = try parser.createTemporary(Node.PrefixOp.PtrInfo.Align);
+                value.node = arg3;
+                value.bit_range = Node.PrefixOp.PtrInfo.Align.BitRange{ .start = &start.base, .end = &end.base };
+                result = value;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeAlign };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeAlign;
         },
         264 => {
@@ -5897,22 +5898,22 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 7;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.Identifier);
-        node.token = arg3;
-        const start = try parser.createNode(Node.IntegerLiteral);
-        start.token = arg5;
-        const end = try parser.createNode(Node.IntegerLiteral);
-        end.token = arg7;
-        const value = try parser.createTemporary(Node.PrefixOp.PtrInfo.Align);
-        value.node = &node.base;
-        value.bit_range = Node.PrefixOp.PtrInfo.Align.BitRange{ .start = &start.base, .end = &end.base };
-        result = value;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeAlign };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.Identifier);
+                node.token = arg3;
+                const start = try parser.createNode(Node.IntegerLiteral);
+                start.token = arg5;
+                const end = try parser.createNode(Node.IntegerLiteral);
+                end.token = arg7;
+                const value = try parser.createTemporary(Node.PrefixOp.PtrInfo.Align);
+                value.node = &node.base;
+                value.bit_range = Node.PrefixOp.PtrInfo.Align.BitRange{ .start = &start.base, .end = &end.base };
+                result = value;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeAlign };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeAlign;
         },
         265 => {
@@ -5925,16 +5926,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.ErrorTag);
-        node.doc_comments = arg1;
-        node.name_token = arg2;
-        result = try parser.createListWithNode(NodeList, &node.base);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ErrorTagList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.ErrorTag);
+                node.doc_comments = arg1;
+                node.name_token = arg2;
+                result = try parser.createListWithNode(NodeList, &node.base);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ErrorTagList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ErrorTagList;
         },
         266 => {
@@ -5951,17 +5952,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        const node = try parser.createNode(Node.ErrorTag);
-        node.doc_comments = arg3;
-        node.name_token = arg4;
-        try arg1.append(&node.base);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ErrorTagList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                const node = try parser.createNode(Node.ErrorTag);
+                node.doc_comments = arg3;
+                node.name_token = arg4;
+                try arg1.append(&node.base);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ErrorTagList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ErrorTagList;
         },
         267 => {
@@ -5970,13 +5971,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: SwitchProng
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithNode(NodeList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .SwitchProngList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithNode(NodeList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchProngList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchProngList;
         },
         268 => {
@@ -5991,14 +5992,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg3);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .SwitchProngList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg3);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchProngList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchProngList;
         },
         269 => {
@@ -6007,13 +6008,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: AsmOutputItem
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithNode(NodeList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmOutputList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithNode(NodeList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmOutputList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmOutputList;
         },
         270 => {
@@ -6028,14 +6029,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg3);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmOutputList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg3);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmOutputList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmOutputList;
         },
         271 => {
@@ -6044,13 +6045,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: AsmInputItem
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithNode(NodeList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmInputList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithNode(NodeList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmInputList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmInputList;
         },
         272 => {
@@ -6065,14 +6066,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg3);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .AsmInputList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg3);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmInputList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmInputList;
         },
         273 => {
@@ -6081,15 +6082,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: StringLiteral
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.StringLiteral);
-        node.token = arg1;
-        result = try parser.createListWithNode(NodeList, &node.base);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .StringList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.StringLiteral);
+                node.token = arg1;
+                result = try parser.createListWithNode(NodeList, &node.base);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .StringList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.StringList;
         },
         274 => {
@@ -6104,16 +6105,16 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        const node = try parser.createNode(Node.StringLiteral);
-        node.token = arg3;
-        try arg1.append(&node.base);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .StringList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                const node = try parser.createNode(Node.StringLiteral);
+                node.token = arg3;
+                try arg1.append(&node.base);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .StringList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.StringList;
         },
         275 => {
@@ -6134,13 +6135,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeParamDeclList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeParamDeclList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeParamDeclList;
         },
         277 => {
@@ -6153,14 +6154,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        arg2.doc_comments = arg1;
-        result = try parser.createListWithNode(NodeList, &arg2.base);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ParamDeclList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                arg2.doc_comments = arg1;
+                result = try parser.createListWithNode(NodeList, &arg2.base);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ParamDeclList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamDeclList;
         },
         278 => {
@@ -6177,15 +6178,15 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        arg4.doc_comments = arg3;
-        try arg1.append(&arg4.base);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ParamDeclList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                arg4.doc_comments = arg3;
+                try arg1.append(&arg4.base);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ParamDeclList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamDeclList;
         },
         279 => {
@@ -6206,13 +6207,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeExprList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeExprList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeExprList;
         },
         281 => {
@@ -6221,13 +6222,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Expr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithNode(NodeList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ExprList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithNode(NodeList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ExprList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ExprList;
         },
         282 => {
@@ -6242,14 +6243,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg3);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .ExprList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg3);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ExprList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ExprList;
         },
         283 => {
@@ -6258,13 +6259,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Expr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithNode(NodeList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .InitList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithNode(NodeList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .InitList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.InitList;
         },
         284 => {
@@ -6281,17 +6282,17 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 3;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        const node = try parser.createNode(Node.FieldInitializer);
-        node.period_token = arg1;
-        node.name_token = arg2;
-        node.expr = arg4;
-        result = try parser.createListWithNode(NodeList, &node.base);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .InitList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                const node = try parser.createNode(Node.FieldInitializer);
+                node.period_token = arg1;
+                node.name_token = arg2;
+                node.expr = arg4;
+                result = try parser.createListWithNode(NodeList, &node.base);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .InitList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.InitList;
         },
         285 => {
@@ -6306,14 +6307,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg3);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .InitList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg3);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .InitList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.InitList;
         },
         286 => {
@@ -6334,18 +6335,18 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 5;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        const node = try parser.createNode(Node.FieldInitializer);
-        node.period_token = arg3;
-        node.name_token = arg4;
-        node.expr = arg6;
-        try arg1.append(&node.base);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .InitList };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                const node = try parser.createNode(Node.FieldInitializer);
+                node.period_token = arg3;
+                node.name_token = arg4;
+                node.expr = arg6;
+                try arg1.append(&node.base);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .InitList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.InitList;
         },
         287 => {
@@ -6362,9 +6363,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_pub
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybePub };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybePub };
             return TerminalId.MaybePub;
         },
         289 => {
@@ -6385,13 +6386,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg2;
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeColonTypeExpr };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg2;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeColonTypeExpr };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeColonTypeExpr;
         },
         291 => {
@@ -6408,9 +6409,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Expr
             const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeExpr };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeExpr };
             return TerminalId.MaybeExpr;
         },
         293 => {
@@ -6427,9 +6428,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_noalias
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeNoalias };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeNoalias };
             return TerminalId.MaybeNoalias;
         },
         295 => {
@@ -6446,9 +6447,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_inline
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeInline };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeInline };
             return TerminalId.MaybeInline;
         },
         297 => {
@@ -6465,9 +6466,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Identifier
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeIdentifier };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeIdentifier };
             return TerminalId.MaybeIdentifier;
         },
         299 => {
@@ -6484,9 +6485,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Comma
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeComma };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeComma };
             return TerminalId.MaybeComma;
         },
         301 => {
@@ -6503,9 +6504,9 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: Keyword_const
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MaybeConst };
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeConst };
             return TerminalId.MaybeConst;
         },
         303 => {
@@ -6514,13 +6515,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: LineString
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithToken(TokenList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MultilineStringLiteral };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithToken(TokenList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MultilineStringLiteral };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MultilineStringLiteral;
         },
         304 => {
@@ -6533,14 +6534,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg2);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MultilineStringLiteral };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg2);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MultilineStringLiteral };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MultilineStringLiteral;
         },
         305 => {
@@ -6549,13 +6550,13 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             // Symbol: LineCString
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = try parser.createListWithToken(TokenList, arg1);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MultilineCStringLiteral };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = try parser.createListWithToken(TokenList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MultilineCStringLiteral };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MultilineCStringLiteral;
         },
         306 => {
@@ -6568,14 +6569,14 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
 
             // Adjust the parse stack and current state
             parser.stack.len -= 1;
-            parser.state = parser.stack.items[parser.stack.len-1].state;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
             {
-        result = arg1;
-        try arg1.append(arg2);
-    }
-            parser.stack.items[parser.stack.len-1].state = parser.state;
-            parser.stack.items[parser.stack.len-1].value = StackValue{ .Terminal = .MultilineCStringLiteral };
-            parser.stack.items[parser.stack.len-1].item = @ptrToInt(result);
+                result = arg1;
+                try arg1.append(arg2);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MultilineCStringLiteral };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MultilineCStringLiteral;
         },
         else => unreachable,

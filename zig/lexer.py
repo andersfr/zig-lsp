@@ -3,6 +3,9 @@
 import re
 import sys
 import string
+import pprint
+
+pp = pprint.PrettyPrinter(indent=2)
 
 def regex_mod(m,s):
     if m == '':

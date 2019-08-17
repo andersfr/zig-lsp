@@ -225,7 +225,7 @@ pub const TerminalId = enum(u8) {
 };
 
 pub fn terminalIdToString(id: TerminalId) []const u8 {
-    switch(id) {
+    switch (id) {
         .Accept => return "$accept",
         .Expr => return "Expr",
         .ContainerDeclOp => return "ContainerDeclOp",
@@ -311,6 +311,4 @@ pub fn terminalIdToString(id: TerminalId) []const u8 {
         .AsmOutput => return "AsmOutput",
         .MaybeParamDeclList => return "ParamDeclList?",
     }
-
 }
-

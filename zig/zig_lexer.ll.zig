@@ -127,7 +127,7 @@
 // %token FloatLiteral                       %dfa [0-9]+\.([0-9]+)([pP][-+]?[0-9]+)?
 // %token FloatLiteral                       %dfa 0x([0-9A-Fa-f]+)\.?[pP][-+]?[0-9A-Fa-f]+
 // %token FloatLiteral                       %dfa [0-9]+\.?[pP][-+]?[0-9]+
-// %token Identifier                         %dfa [A-Zabd-z_]([A-Za-z0-9_]*)
+// %token Identifier                         %dfa [A-Za-z_]([A-Za-z0-9_]*)
 // %token Identifier                         %dfa @"[A-Za-z_]([A-Za-z0-9_]*)"
 // %token Builtin                            %dfa @[A-Za-z_]([A-Za-z0-9_]*)
 
@@ -240,41 +240,25 @@
 }
 // %end
 
-// StringLiteral or Identifier
-// %dfa c
+// StringLiteral
+// %dfa c"[^"]
 {
-    if(self.peek == '"') {
+    while (true) {
+        switch (self.peek) {
+            '\n', -1 => {
+                // TODO: error
+                return Id.StringLiteral;
+            },
+            '\\' => {
+                _ = self.getc();
+            },
+            '"' => {
+                _ = self.getc();
+                return Id.StringLiteral;
+            },
+            else => {},
+        }
         _ = self.getc();
-        while (true) {
-            switch (self.peek) {
-                '\n', -1 => {
-                    // TODO: error
-                    return Id.StringLiteral;
-                },
-                '\\' => {
-                    _ = self.getc();
-                },
-                '"' => {
-                    _ = self.getc();
-                    return Id.StringLiteral;
-                },
-                else => {},
-            }
-            _ = self.getc();
-        }
-    }
-    else {
-        while (true) {
-            switch (self.peek) {
-                'a'...'z','A'...'Z','_' => {
-                        _ = self.getc();
-                        continue;
-                },
-                else => {
-                    return Id.Identifier;
-                },
-            }
-        }
     }
 }
 // %end
