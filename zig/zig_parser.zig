@@ -14,6 +14,8 @@ const Tokens = @import("zig_grammar.tokens.zig");
 const Actions = @import("zig_grammar.actions.zig");
 const Transitions = @import("zig_grammar.tables.zig");
 
+const DirectArena = @import("direct_arena.zig").DirectArena;
+
 pub usingnamespace Types;
 
 usingnamespace Errors;
@@ -27,8 +29,8 @@ const Engine = struct {
     allocator: *std.mem.Allocator,
     errors: ErrorList,
 
-    pub fn init(allocator: *std.mem.Allocator) Self {
-        return Self{ .stack = Stack.init(allocator), .errors = ErrorList.init(allocator), .allocator = allocator };
+    pub fn init(allocator: *std.mem.Allocator, arena_allocator: *std.mem.Allocator) Self {
+        return Self{ .stack = Stack.init(allocator), .errors = ErrorList.init(allocator), .allocator = arena_allocator };
     }
 
     pub fn deinit(self: *Self) void {
@@ -418,29 +420,24 @@ const Engine = struct {
 
 pub const Parser = struct {
     allocator: *std.mem.Allocator,
-    arena: *std.heap.ArenaAllocator,
+    arena: *DirectArena,
     engine: Engine = undefined,
     tokens: std.ArrayList(Token) = undefined,
 
     pub fn init(allocator: *std.mem.Allocator) !Parser {
-        var arena = try allocator.create(std.heap.ArenaAllocator);
-        arena.* = std.heap.ArenaAllocator.init(allocator);
-        errdefer {
-            arena.deinit();
-            allocator.destroy(arena);
-        }
+        var arena = try DirectArena.init();
+        errdefer arena.deinit();
 
         return Parser{ .allocator = allocator, .arena = arena };
     }
 
     pub fn deinit(self: *Parser) void {
         self.arena.deinit();
-        self.allocator.destroy(self.arena);
     }
 
     pub fn run(self: *Parser, buffer: []const u8) !bool {
-        self.engine = Engine.init(&self.arena.allocator);
-        self.tokens = std.ArrayList(Token).init(&self.arena.allocator);
+        self.engine = Engine.init(self.allocator, &self.arena.allocator);
+        self.tokens = std.ArrayList(Token).init(self.allocator);
 
         var lexer = Lexer.init(buffer);
 
