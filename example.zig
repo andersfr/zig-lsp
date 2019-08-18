@@ -8,7 +8,7 @@ pub async fn nextCodepointSlice(it: *Utf8Iterator) ?[]const u8 {
 
     const x = fn() fsda.ds;
     {
-        @setCold( c"sdlkj" );
+        @setCold( c"" );
         fdsa = c\\ sadfsadfsd
             ;
     }

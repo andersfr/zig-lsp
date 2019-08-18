@@ -334,7 +334,7 @@ test "////" {
     testToken("////", .LineComment);
 }
 test "@builtin" {
-    testTokens("@builtin", [_]Id{ .Builtin, .Identifier });
+    testToken("@builtin", .Builtin);
 }
 test "@\"identifier\"" {
     testToken("@\"identifier\"", .Identifier);
@@ -349,10 +349,10 @@ test "+++" {
     testTokens("+++", [_]Id{ .PlusPlus, .Plus });
 }
 test "0b2" {
-    testTokens("0b2", [_]Id{ .IntegerLiteral, .Identifier });
+    testTokens("0b2", [_]Id{ .Invalid, .IntegerLiteral });
 }
 test "0o8" {
-    testTokens("0o8", [_]Id{ .IntegerLiteral, .Identifier });
+    testTokens("0o8", [_]Id{ .Invalid, .IntegerLiteral });
 }
 test "[0..]" {
     testTokens("[0..]", [_]Id{ .LBracket, .IntegerLiteral, .Ellipsis2, .RBracket });
