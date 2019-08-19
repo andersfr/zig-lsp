@@ -448,7 +448,7 @@ pub const Parser = struct {
             if (token.id == .Eof)
                 break;
         }
-        const shebang = if (self.tokens.items[1].id == .ShebangLine) @intCast(usize, 1) else @intCast(usize, 0);
+        const shebang = if (self.tokens.items[1].id == .ShebangLine) usize(1) else usize(0);
         var i: usize = shebang + 1;
         // If file starts with a DocComment this is considered a RootComment
         while (i < self.tokens.len) : (i += 1) {

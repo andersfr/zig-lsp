@@ -176,10 +176,10 @@ pub const Lexer = struct {
             },
             '#' => {
                 if(self.index == 1 and self.peek == '!') {
-                    self.getc();
                     while(self.peek != '\n' and self.peek != -1) self.getc();
                     return Id.ShebangLine;
                 }
+                return Id.Invalid;
             },
             '%' => {
                 if(self.peek == '=') {

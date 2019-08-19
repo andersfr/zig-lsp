@@ -49,7 +49,6 @@ pub const DirectArena = struct {
         if (new_size == 0)
             return (([*]u8)(undefined))[0..0];
 
-        std.debug.assert(old_mem_unaligned.len == 0);
         std.debug.assert(new_size <= std.mem.page_size - @sizeOf(DirectArena));
 
         const arena = @fieldParentPtr(DirectArena, "allocator", allocator).next;
@@ -59,6 +58,8 @@ pub const DirectArena = struct {
         if(arena.offset + new_size <= std.mem.page_size) {
             const slice = @intToPtr([*]u8, @ptrToInt(arena) + arena.offset)[0..new_size];
             arena.offset += new_size;
+            if(old_mem_unaligned.len > 0)
+                @memcpy(slice.ptr, old_mem_unaligned.ptr, old_mem_unaligned.len);
             return slice;
         }
 
@@ -78,6 +79,8 @@ pub const DirectArena = struct {
         if(next.offset + new_size <= std.mem.page_size) {
             const slice = @intToPtr([*]u8, @ptrToInt(next) + next.offset)[0..new_size];
             next.offset += new_size;
+            if(old_mem_unaligned.len > 0)
+                @memcpy(slice.ptr, old_mem_unaligned.ptr, old_mem_unaligned.len);
             return slice;
         }
 
