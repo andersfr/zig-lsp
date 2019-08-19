@@ -26,6 +26,8 @@ Install the extension
 
 Note: The extension assumes that `zig-lsp` is in your path. This corresponds to the `server` component of this project.
 
+Credits: This is a fork from https://github.com/gernest/vscode-zig with minimal additions.
+
 #### Atom IDE
 Will be posted once a proper language-zig package exists.
 
