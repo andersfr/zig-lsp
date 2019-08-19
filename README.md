@@ -20,6 +20,12 @@ if executable('zig-lsp')
         \ })
 ```
 
+#### VSCode
+Download zig-0.1.0.vsix from this repo: https://github.com/andersfr/vscode-zig
+Install the extension
+
+Note: The extension assumes that `zig-lsp` is in your path. This corresponds to the `server` component of this project.
+
 #### Atom IDE
 Will be posted once a proper language-zig package exists.
 
