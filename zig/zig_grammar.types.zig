@@ -132,77 +132,6 @@ pub const Node = struct {
         unreachable;
     }
 
-    pub fn requireSemiColon(base: *const Node) bool {
-        var n = base;
-        while (true) {
-            switch (n.id) {
-                Id.Root,
-                Id.ContainerField,
-                Id.ParamDecl,
-                Id.Block,
-                Id.Payload,
-                Id.PointerPayload,
-                Id.PointerIndexPayload,
-                Id.Switch,
-                Id.SwitchCase,
-                Id.SwitchElse,
-                Id.FieldInitializer,
-                Id.DocComment,
-                Id.TestDecl,
-                => return false,
-                Id.While => {
-                    const while_node = @fieldParentPtr(While, "base", n);
-                    if (while_node.@"else") |@"else"| {
-                        n = &@"else".base;
-                        continue;
-                    }
-
-                    return while_node.body.id != Id.Block;
-                },
-                Id.For => {
-                    const for_node = @fieldParentPtr(For, "base", n);
-                    if (for_node.@"else") |@"else"| {
-                        n = &@"else".base;
-                        continue;
-                    }
-
-                    return for_node.body.id != Id.Block;
-                },
-                Id.If => {
-                    const if_node = @fieldParentPtr(If, "base", n);
-                    if (if_node.@"else") |@"else"| {
-                        n = &@"else".base;
-                        continue;
-                    }
-
-                    return if_node.body.id != Id.Block;
-                },
-                Id.Else => {
-                    const else_node = @fieldParentPtr(Else, "base", n);
-                    n = else_node.body;
-                    continue;
-                },
-                Id.Defer => {
-                    const defer_node = @fieldParentPtr(Defer, "base", n);
-                    return defer_node.expr.id != Id.Block;
-                },
-                Id.Comptime => {
-                    const comptime_node = @fieldParentPtr(Comptime, "base", n);
-                    return comptime_node.expr.id != Id.Block;
-                },
-                Id.Suspend => {
-                    const suspend_node = @fieldParentPtr(Suspend, "base", n);
-                    if (suspend_node.body) |body| {
-                        return body.id != Id.Block;
-                    }
-
-                    return true;
-                },
-                else => return true,
-            }
-        }
-    }
-
     pub fn dump(self: *Node, indent: usize) void {
         {
             var i: usize = 0;
@@ -229,6 +158,7 @@ pub const Node = struct {
 
     pub const Root = struct {
         base: Node,
+        shebang_token: ?TokenIndex,
         doc_comments: ?*DocComment,
         decls: DeclList,
         eof_token: TokenIndex,

@@ -1,3 +1,4 @@
+#!/usr/bin/env zig
 const ptr = try fds() + try fds();
 pub async fn nextCodepointSlice(it: *Utf8Iterator) ?[]const u8 {
     if (it.i >= it.bytes.len)

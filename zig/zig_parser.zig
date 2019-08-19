@@ -441,7 +441,7 @@ pub const Parser = struct {
 
         var lexer = Lexer.init(buffer);
 
-        try self.tokens.append(Token{ .start = 0, .end = 0, .id = .Newline });
+        try self.tokens.append(Token{ .start = 1, .end = 0, .id = .Newline });
         while (true) {
             var token = lexer.next();
             try self.tokens.append(token);
@@ -454,8 +454,8 @@ pub const Parser = struct {
         while (i < self.tokens.len) : (i += 1) {
             self.tokens.items[i].id = if (self.tokens.items[i].id == .DocComment) .RootDocComment else break;
         }
-        i = shebang;
-        var line: usize = 0;
+        i = shebang+1;
+        var line: usize = 1;
         var last_newline = &self.tokens.items[0];
         var resync_progress: usize = 0;
         parser_loop: while (i < self.tokens.len) : (i += 1) {
@@ -507,9 +507,15 @@ pub const Parser = struct {
         stack_trace("\n");
         if (self.engine.stack.len > 0) {
             const Root = @intToPtr(?*Node.Root, self.engine.stack.at(0).item) orelse return false;
+            if(shebang != 0)
+                Root.shebang_token = &self.tokens.items[1];
             Root.eof_token = &self.tokens.items[self.tokens.len - 1];
             return true;
         }
+        if(self.engine.errors.len > 0 and self.engine.errors.at(self.engine.errors.len-1).info == .AbortedParse)
+            return false;
+
+        try self.engine.reportError(ParseError.AbortedParse, &self.tokens.items[i]);
         return false;
     }
 };
