@@ -439,6 +439,8 @@ pub const Parser = struct {
         self.engine = Engine.init(self.allocator, &self.arena.allocator);
         self.tokens = std.ArrayList(Token).init(self.allocator);
 
+        try self.tokens.ensureCapacity((buffer.len*10)/8);
+
         var lexer = Lexer.init(buffer);
 
         try self.tokens.append(Token{ .start = 1, .end = 0, .id = .Newline });

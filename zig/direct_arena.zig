@@ -84,6 +84,10 @@ pub const DirectArena = struct {
             return slice;
         }
 
-        return error.OutOfMemory;
+        const x = try std.heap.c_allocator.alloc(u8, new_size);
+        if(old_mem_unaligned.len > 0)
+                @memcpy(x.ptr, old_mem_unaligned.ptr, old_mem_unaligned.len);
+
+        return x;
     }
 };

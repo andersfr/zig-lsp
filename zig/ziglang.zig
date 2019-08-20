@@ -293,7 +293,17 @@ pub extern "LALR" const zig_grammar = struct {
     fn MaybeThreadlocal(Keyword_threadlocal: *Token) ?*Token;
 
     // Functions
-    fn FnProto(MaybeFnCC: ?*Token, Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Expr: *Node) *Node.FnProto {
+    fn FnProto(Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Expr: *Node) *Node.FnProto {
+        const node = try parser.createNode(Node.FnProto);
+        node.fn_token = arg1;
+        node.name_token = arg2;
+        node.params = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+        node.align_expr = arg6;
+        node.section_expr = arg7;
+        node.return_type = Node.FnProto.ReturnType{ .Explicit = arg8 };
+        result = node;
+    }
+    fn FnProto(FnCC: *Token, Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Expr: *Node) *Node.FnProto {
         const node = try parser.createNode(Node.FnProto);
         node.cc_token = arg1;
         node.fn_token = arg2;
@@ -304,7 +314,17 @@ pub extern "LALR" const zig_grammar = struct {
         node.return_type = Node.FnProto.ReturnType{ .Explicit = arg9 };
         result = node;
     }
-    fn FnProto(MaybeFnCC: ?*Token, Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Bang: Precedence_none(*Token), Expr: *Node) *Node.FnProto {
+    fn FnProto(Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Bang: Precedence_none(*Token), Expr: *Node) *Node.FnProto {
+        const node = try parser.createNode(Node.FnProto);
+        node.fn_token = arg1;
+        node.name_token = arg2;
+        node.params = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+        node.align_expr = arg6;
+        node.section_expr = arg7;
+        node.return_type = Node.FnProto.ReturnType{ .InferErrorSet = arg9 };
+        result = node;
+    }
+    fn FnProto(FnCC: *Token, Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Bang: Precedence_none(*Token), Expr: *Node) *Node.FnProto {
         const node = try parser.createNode(Node.FnProto);
         node.cc_token = arg1;
         node.fn_token = arg2;
@@ -315,7 +335,19 @@ pub extern "LALR" const zig_grammar = struct {
         node.return_type = Node.FnProto.ReturnType{ .InferErrorSet = arg10 };
         result = node;
     }
-    fn FnProto(MaybeFnCC: ?*Token, Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Keyword_var: *Token) *Node.FnProto {
+    fn FnProto(Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Keyword_var: *Token) *Node.FnProto {
+        const vnode = try parser.createNode(Node.VarType);
+        vnode.token = arg8;
+        const node = try parser.createNode(Node.FnProto);
+        node.fn_token = arg1;
+        node.name_token = arg2;
+        node.params = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+        node.align_expr = arg6;
+        node.section_expr = arg7;
+        node.return_type = Node.FnProto.ReturnType{ .Explicit = &vnode.base };
+        result = node;
+    }
+    fn FnProto(FnCC: *Token, Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Keyword_var: *Token) *Node.FnProto {
         const vnode = try parser.createNode(Node.VarType);
         vnode.token = arg9;
         const node = try parser.createNode(Node.FnProto);
@@ -328,7 +360,19 @@ pub extern "LALR" const zig_grammar = struct {
         node.return_type = Node.FnProto.ReturnType{ .Explicit = &vnode.base };
         result = node;
     }
-    fn FnProto(MaybeFnCC: ?*Token, Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Bang: Precedence_none(*Token), Keyword_var: *Token) *Node.FnProto {
+    fn FnProto(Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Bang: Precedence_none(*Token), Keyword_var: *Token) *Node.FnProto {
+        const vnode = try parser.createNode(Node.VarType);
+        vnode.token = arg9;
+        const node = try parser.createNode(Node.FnProto);
+        node.fn_token = arg1;
+        node.name_token = arg2;
+        node.params = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+        node.align_expr = arg6;
+        node.section_expr = arg7;
+        node.return_type = Node.FnProto.ReturnType{ .InferErrorSet = &vnode.base };
+        result = node;
+    }
+    fn FnProto(FnCC: *Token, Keyword_fn: *Token, MaybeIdentifier: ?*Token, LParen: Precedence_none(*Token), MaybeParamDeclList: ?*NodeList, RParen: *Token, MaybeByteAlign: ?*Node, MaybeLinkSection: ?*Node, Bang: Precedence_none(*Token), Keyword_var: *Token) *Node.FnProto {
         const vnode = try parser.createNode(Node.VarType);
         vnode.token = arg10;
         const node = try parser.createNode(Node.FnProto);
@@ -1329,7 +1373,16 @@ pub extern "LALR" const zig_grammar = struct {
 
     // Containers (struct/enum/union)
     fn Expr(ContainerDecl: *Node) *Node;
-    fn ContainerDecl(MaybeExternPacked: ?*Token, ContainerDeclOp: *Token, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
+    fn ContainerDecl(ContainerDeclOp: *Token, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
+        const node = try parser.createNode(Node.ContainerDecl);
+        node.kind_token = arg1;
+        node.init_arg_expr = .None;
+        node.lbrace_token = arg2;
+        node.fields_and_decls = if (arg3) |p| p.* else NodeList.init(parser.allocator);
+        node.rbrace_token = arg4;
+        result = &node.base;
+    }
+    fn ContainerDecl(ExternPacked: *Token, ContainerDeclOp: *Token, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
         const node = try parser.createNode(Node.ContainerDecl);
         node.layout_token = arg1;
         node.kind_token = arg2;
@@ -1339,7 +1392,16 @@ pub extern "LALR" const zig_grammar = struct {
         node.rbrace_token = arg5;
         result = &node.base;
     }
-    fn ContainerDecl(MaybeExternPacked: ?*Token, Keyword_enum: *Token, ContainerDeclTypeType: *Node, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
+    fn ContainerDecl(Keyword_enum: *Token, ContainerDeclTypeType: *Node, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
+        const node = try parser.createNode(Node.ContainerDecl);
+        node.kind_token = arg1;
+        node.init_arg_expr = Node.ContainerDecl.InitArg{ .Type = arg2 };
+        node.lbrace_token = arg3;
+        node.fields_and_decls = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+        node.rbrace_token = arg5;
+        result = &node.base;
+    }
+    fn ContainerDecl(ExternPacked: *Token, Keyword_enum: *Token, ContainerDeclTypeType: *Node, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
         const node = try parser.createNode(Node.ContainerDecl);
         node.layout_token = arg1;
         node.kind_token = arg2;
@@ -1349,7 +1411,16 @@ pub extern "LALR" const zig_grammar = struct {
         node.rbrace_token = arg6;
         result = &node.base;
     }
-    fn ContainerDecl(MaybeExternPacked: ?*Token, Keyword_union: *Token, ContainerDeclTypeType: *Node, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
+    fn ContainerDecl(Keyword_union: *Token, ContainerDeclTypeType: *Node, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
+        const node = try parser.createNode(Node.ContainerDecl);
+        node.kind_token = arg1;
+        node.init_arg_expr = Node.ContainerDecl.InitArg{ .Type = arg2 };
+        node.lbrace_token = arg3;
+        node.fields_and_decls = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+        node.rbrace_token = arg5;
+        result = &node.base;
+    }
+    fn ContainerDecl(ExternPacked: *Token, Keyword_union: *Token, ContainerDeclTypeType: *Node, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
         const node = try parser.createNode(Node.ContainerDecl);
         node.layout_token = arg1;
         node.kind_token = arg2;
@@ -1359,7 +1430,16 @@ pub extern "LALR" const zig_grammar = struct {
         node.rbrace_token = arg6;
         result = &node.base;
     }
-    fn ContainerDecl(MaybeExternPacked: ?*Token, Keyword_union: *Token, ContainerDeclTypeEnum: ?*Node, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
+    fn ContainerDecl(Keyword_union: *Token, ContainerDeclTypeEnum: ?*Node, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
+        const node = try parser.createNode(Node.ContainerDecl);
+        node.kind_token = arg1;
+        node.init_arg_expr = Node.ContainerDecl.InitArg{ .Enum = arg2 };
+        node.lbrace_token = arg3;
+        node.fields_and_decls = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+        node.rbrace_token = arg5;
+        result = &node.base;
+    }
+    fn ContainerDecl(ExternPacked: *Token, Keyword_union: *Token, ContainerDeclTypeEnum: ?*Node, LBrace: *Token, MaybeContainerMembers: ?*NodeList, RBrace: *Token) *Node {
         const node = try parser.createNode(Node.ContainerDecl);
         node.layout_token = arg1;
         node.kind_token = arg2;
@@ -1371,9 +1451,8 @@ pub extern "LALR" const zig_grammar = struct {
     }
 
     // ContainerDecl helper
-    fn MaybeExternPacked() ?*Token;
-    fn MaybeExternPacked(Keyword_extern: *Token) ?*Token;
-    fn MaybeExternPacked(Keyword_packed: *Token) ?*Token;
+    fn ExternPacked(Keyword_extern: *Token) *Token;
+    fn ExternPacked(Keyword_packed: *Token) *Token;
 
     fn SwitchExpr(Keyword_switch: *Token, LParen: *Token, Expr: *Node, RParen: *Token, LBrace: *Token, SwitchProngList: *NodeList, MaybeComma: ?*Token, RBrace: *Token) *Node {
         const node = try parser.createNode(Node.Switch);
@@ -1515,11 +1594,10 @@ pub extern "LALR" const zig_grammar = struct {
     }
 
     // Function specific
-    fn MaybeFnCC() ?*Token;
-    fn MaybeFnCC(Keyword_nakedcc: *Token) ?*Token;
-    fn MaybeFnCC(Keyword_stdcallcc: *Token) ?*Token;
-    fn MaybeFnCC(Keyword_extern: *Token) ?*Token;
-    fn MaybeFnCC(Keyword_async: *Token) ?*Token;
+    fn FnCC(Keyword_nakedcc: *Token) *Token;
+    fn FnCC(Keyword_stdcallcc: *Token) *Token;
+    fn FnCC(Keyword_extern: *Token) *Token;
+    fn FnCC(Keyword_async: *Token) *Token;
 
     fn ParamDecl(MaybeNoalias: ?*Token, ParamType: *Node.ParamDecl) *Node.ParamDecl {
         result = arg2;

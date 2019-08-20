@@ -718,8 +718,46 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
         36 => {
             // Symbol: FnProto
             var result: *Node.FnProto = undefined;
-            // Symbol: MaybeFnCC
-            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 9].item);
+            // Symbol: Keyword_fn
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 8].item).?;
+            // Symbol: MaybeIdentifier
+            const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 7].item);
+            // Symbol: LParen
+            const arg3 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 6].item).?;
+            // Symbol: MaybeParamDeclList
+            const arg4 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 5].item);
+            // Symbol: RParen
+            const arg5 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 4].item).?;
+            // Symbol: MaybeByteAlign
+            const arg6 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 3].item);
+            // Symbol: MaybeLinkSection
+            const arg7 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 2].item);
+            // Symbol: Expr
+            const arg8 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
+
+            // Adjust the parse stack and current state
+            parser.stack.len -= 7;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                const node = try parser.createNode(Node.FnProto);
+                node.fn_token = arg1;
+                node.name_token = arg2;
+                node.params = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+                node.align_expr = arg6;
+                node.section_expr = arg7;
+                node.return_type = Node.FnProto.ReturnType{ .Explicit = arg8 };
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnProto };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.FnProto;
+        },
+        37 => {
+            // Symbol: FnProto
+            var result: *Node.FnProto = undefined;
+            // Symbol: FnCC
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 9].item).?;
             // Symbol: Keyword_fn
             const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 8].item).?;
             // Symbol: MaybeIdentifier
@@ -756,11 +794,51 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.FnProto;
         },
-        37 => {
+        38 => {
             // Symbol: FnProto
             var result: *Node.FnProto = undefined;
-            // Symbol: MaybeFnCC
-            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 10].item);
+            // Symbol: Keyword_fn
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 9].item).?;
+            // Symbol: MaybeIdentifier
+            const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 8].item);
+            // Symbol: LParen
+            const arg3 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 7].item).?;
+            // Symbol: MaybeParamDeclList
+            const arg4 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 6].item);
+            // Symbol: RParen
+            const arg5 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 5].item).?;
+            // Symbol: MaybeByteAlign
+            const arg6 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 4].item);
+            // Symbol: MaybeLinkSection
+            const arg7 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 3].item);
+            // Symbol: Bang
+            const arg8 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 2].item).?;
+            // Symbol: Expr
+            const arg9 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
+
+            // Adjust the parse stack and current state
+            parser.stack.len -= 8;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                const node = try parser.createNode(Node.FnProto);
+                node.fn_token = arg1;
+                node.name_token = arg2;
+                node.params = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+                node.align_expr = arg6;
+                node.section_expr = arg7;
+                node.return_type = Node.FnProto.ReturnType{ .InferErrorSet = arg9 };
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnProto };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.FnProto;
+        },
+        39 => {
+            // Symbol: FnProto
+            var result: *Node.FnProto = undefined;
+            // Symbol: FnCC
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 10].item).?;
             // Symbol: Keyword_fn
             const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 9].item).?;
             // Symbol: MaybeIdentifier
@@ -799,11 +877,51 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.FnProto;
         },
-        38 => {
+        40 => {
             // Symbol: FnProto
             var result: *Node.FnProto = undefined;
-            // Symbol: MaybeFnCC
-            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 9].item);
+            // Symbol: Keyword_fn
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 8].item).?;
+            // Symbol: MaybeIdentifier
+            const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 7].item);
+            // Symbol: LParen
+            const arg3 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 6].item).?;
+            // Symbol: MaybeParamDeclList
+            const arg4 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 5].item);
+            // Symbol: RParen
+            const arg5 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 4].item).?;
+            // Symbol: MaybeByteAlign
+            const arg6 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 3].item);
+            // Symbol: MaybeLinkSection
+            const arg7 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 2].item);
+            // Symbol: Keyword_var
+            const arg8 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
+
+            // Adjust the parse stack and current state
+            parser.stack.len -= 7;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                const vnode = try parser.createNode(Node.VarType);
+                vnode.token = arg8;
+                const node = try parser.createNode(Node.FnProto);
+                node.fn_token = arg1;
+                node.name_token = arg2;
+                node.params = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+                node.align_expr = arg6;
+                node.section_expr = arg7;
+                node.return_type = Node.FnProto.ReturnType{ .Explicit = &vnode.base };
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnProto };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.FnProto;
+        },
+        41 => {
+            // Symbol: FnProto
+            var result: *Node.FnProto = undefined;
+            // Symbol: FnCC
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 9].item).?;
             // Symbol: Keyword_fn
             const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 8].item).?;
             // Symbol: MaybeIdentifier
@@ -842,11 +960,53 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.FnProto;
         },
-        39 => {
+        42 => {
             // Symbol: FnProto
             var result: *Node.FnProto = undefined;
-            // Symbol: MaybeFnCC
-            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 10].item);
+            // Symbol: Keyword_fn
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 9].item).?;
+            // Symbol: MaybeIdentifier
+            const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 8].item);
+            // Symbol: LParen
+            const arg3 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 7].item).?;
+            // Symbol: MaybeParamDeclList
+            const arg4 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 6].item);
+            // Symbol: RParen
+            const arg5 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 5].item).?;
+            // Symbol: MaybeByteAlign
+            const arg6 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 4].item);
+            // Symbol: MaybeLinkSection
+            const arg7 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 3].item);
+            // Symbol: Bang
+            const arg8 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 2].item).?;
+            // Symbol: Keyword_var
+            const arg9 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
+
+            // Adjust the parse stack and current state
+            parser.stack.len -= 8;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                const vnode = try parser.createNode(Node.VarType);
+                vnode.token = arg9;
+                const node = try parser.createNode(Node.FnProto);
+                node.fn_token = arg1;
+                node.name_token = arg2;
+                node.params = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+                node.align_expr = arg6;
+                node.section_expr = arg7;
+                node.return_type = Node.FnProto.ReturnType{ .InferErrorSet = &vnode.base };
+                result = node;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnProto };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.FnProto;
+        },
+        43 => {
+            // Symbol: FnProto
+            var result: *Node.FnProto = undefined;
+            // Symbol: FnCC
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 10].item).?;
             // Symbol: Keyword_fn
             const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 9].item).?;
             // Symbol: MaybeIdentifier
@@ -887,7 +1047,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.FnProto;
         },
-        40 => {
+        44 => {
             // Symbol: VarDecl
             var result: *Node = undefined;
             // Symbol: Keyword_const
@@ -924,7 +1084,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.VarDecl;
         },
-        41 => {
+        45 => {
             // Symbol: VarDecl
             var result: *Node = undefined;
             // Symbol: Keyword_var
@@ -961,7 +1121,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.VarDecl;
         },
-        42 => {
+        46 => {
             // Symbol: ContainerField
             var result: *Node = undefined;
             // Symbol: Identifier
@@ -986,7 +1146,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerField;
         },
-        43 => {
+        47 => {
             // Symbol: MaybeStatements
             var result: ?*NodeList = null;
 
@@ -994,7 +1154,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeStatements } });
             return TerminalId.MaybeStatements;
         },
-        44 => {
+        48 => {
             // Symbol: MaybeStatements
             var result: ?*NodeList = null;
             // Symbol: Statements
@@ -1005,7 +1165,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeStatements };
             return TerminalId.MaybeStatements;
         },
-        45 => {
+        49 => {
             // Symbol: Statements
             var result: *NodeList = undefined;
             // Symbol: Statement
@@ -1020,7 +1180,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statements;
         },
-        46 => {
+        50 => {
             // Symbol: Statements
             var result: *NodeList = undefined;
             // Symbol: Statements
@@ -1040,7 +1200,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statements;
         },
-        47 => {
+        51 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: Keyword_comptime
@@ -1062,7 +1222,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
-        48 => {
+        52 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: VarDecl
@@ -1073,7 +1233,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
             return TerminalId.Statement;
         },
-        49 => {
+        53 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: Keyword_comptime
@@ -1095,7 +1255,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
-        50 => {
+        54 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: Keyword_suspend
@@ -1116,7 +1276,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
-        51 => {
+        55 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: Keyword_suspend
@@ -1138,7 +1298,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
-        52 => {
+        56 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: Keyword_defer
@@ -1160,7 +1320,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
-        53 => {
+        57 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: Keyword_errdefer
@@ -1182,7 +1342,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
-        54 => {
+        58 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: IfStatement
@@ -1193,7 +1353,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
             return TerminalId.Statement;
         },
-        55 => {
+        59 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: MaybeInline
@@ -1213,7 +1373,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
-        56 => {
+        60 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: MaybeInline
@@ -1233,7 +1393,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
-        57 => {
+        61 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: LabeledStatement
@@ -1244,7 +1404,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
             return TerminalId.Statement;
         },
-        58 => {
+        62 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: SwitchExpr
@@ -1255,7 +1415,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Statement };
             return TerminalId.Statement;
         },
-        59 => {
+        63 => {
             // Symbol: Statement
             var result: *Node = undefined;
             // Symbol: AssignExpr
@@ -1274,7 +1434,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Statement;
         },
-        60 => {
+        64 => {
             // Symbol: IfStatement
             var result: *Node = undefined;
             // Symbol: IfPrefix
@@ -1294,7 +1454,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.IfStatement;
         },
-        61 => {
+        65 => {
             // Symbol: IfStatement
             var result: *Node = undefined;
             // Symbol: IfPrefix
@@ -1317,7 +1477,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.IfStatement;
         },
-        62 => {
+        66 => {
             // Symbol: IfStatement
             var result: *Node = undefined;
             // Symbol: IfPrefix
@@ -1339,7 +1499,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.IfStatement;
         },
-        63 => {
+        67 => {
             // Symbol: IfStatement
             var result: *Node = undefined;
             // Symbol: IfPrefix
@@ -1362,7 +1522,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.IfStatement;
         },
-        64 => {
+        68 => {
             // Symbol: ElseStatement
             var result: *Node.Else = undefined;
             // Symbol: Keyword_else
@@ -1387,7 +1547,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ElseStatement;
         },
-        65 => {
+        69 => {
             // Symbol: LabeledStatement
             var result: *Node = undefined;
             // Symbol: BlockLabel
@@ -1410,7 +1570,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.LabeledStatement;
         },
-        66 => {
+        70 => {
             // Symbol: LabeledStatement
             var result: *Node = undefined;
             // Symbol: BlockLabel
@@ -1433,7 +1593,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.LabeledStatement;
         },
-        67 => {
+        71 => {
             // Symbol: LabeledStatement
             var result: *Node = undefined;
             // Symbol: BlockExpr
@@ -1444,7 +1604,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .LabeledStatement };
             return TerminalId.LabeledStatement;
         },
-        68 => {
+        72 => {
             // Symbol: ForStatement
             var result: *Node.For = undefined;
             // Symbol: ForPrefix
@@ -1464,7 +1624,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ForStatement;
         },
-        69 => {
+        73 => {
             // Symbol: ForStatement
             var result: *Node.For = undefined;
             // Symbol: ForPrefix
@@ -1487,7 +1647,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ForStatement;
         },
-        70 => {
+        74 => {
             // Symbol: ForStatement
             var result: *Node.For = undefined;
             // Symbol: ForPrefix
@@ -1509,7 +1669,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ForStatement;
         },
-        71 => {
+        75 => {
             // Symbol: ForStatement
             var result: *Node.For = undefined;
             // Symbol: ForPrefix
@@ -1532,7 +1692,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ForStatement;
         },
-        72 => {
+        76 => {
             // Symbol: ElseNoPayloadStatement
             var result: *Node.Else = undefined;
             // Symbol: Keyword_else
@@ -1554,7 +1714,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ElseNoPayloadStatement;
         },
-        73 => {
+        77 => {
             // Symbol: WhileStatement
             var result: *Node.While = undefined;
             // Symbol: WhilePrefix
@@ -1574,7 +1734,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhileStatement;
         },
-        74 => {
+        78 => {
             // Symbol: WhileStatement
             var result: *Node.While = undefined;
             // Symbol: WhilePrefix
@@ -1597,7 +1757,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhileStatement;
         },
-        75 => {
+        79 => {
             // Symbol: WhileStatement
             var result: *Node.While = undefined;
             // Symbol: WhilePrefix
@@ -1619,7 +1779,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhileStatement;
         },
-        76 => {
+        80 => {
             // Symbol: WhileStatement
             var result: *Node.While = undefined;
             // Symbol: WhilePrefix
@@ -1642,7 +1802,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhileStatement;
         },
-        77 => {
+        81 => {
             // Symbol: BlockExprStatement
             var result: *Node = undefined;
             // Symbol: BlockExpr
@@ -1653,7 +1813,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .BlockExprStatement };
             return TerminalId.BlockExprStatement;
         },
-        78 => {
+        82 => {
             // Symbol: BlockExprStatement
             var result: *Node = undefined;
             // Symbol: AssignExpr
@@ -1672,7 +1832,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.BlockExprStatement;
         },
-        79 => {
+        83 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1698,7 +1858,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        80 => {
+        84 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1724,7 +1884,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        81 => {
+        85 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1750,7 +1910,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        82 => {
+        86 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1776,7 +1936,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        83 => {
+        87 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1802,7 +1962,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        84 => {
+        88 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1828,7 +1988,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        85 => {
+        89 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1854,7 +2014,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        86 => {
+        90 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1880,7 +2040,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        87 => {
+        91 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1906,7 +2066,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        88 => {
+        92 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1932,7 +2092,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        89 => {
+        93 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1958,7 +2118,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        90 => {
+        94 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -1984,7 +2144,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        91 => {
+        95 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2010,7 +2170,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        92 => {
+        96 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2036,7 +2196,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AssignExpr;
         },
-        93 => {
+        97 => {
             // Symbol: AssignExpr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2047,7 +2207,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AssignExpr };
             return TerminalId.AssignExpr;
         },
-        94 => {
+        98 => {
             // Symbol: MaybeEqualExpr
             var result: ?*Node = null;
 
@@ -2055,7 +2215,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeEqualExpr } });
             return TerminalId.MaybeEqualExpr;
         },
-        95 => {
+        99 => {
             // Symbol: MaybeEqualExpr
             var result: ?*Node = null;
             // Symbol: Equal
@@ -2074,7 +2234,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeEqualExpr;
         },
-        96 => {
+        100 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Recovery
@@ -2091,7 +2251,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        97 => {
+        101 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: LParen
@@ -2118,7 +2278,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        98 => {
+        102 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2144,7 +2304,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        99 => {
+        103 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2172,7 +2332,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        100 => {
+        104 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2198,7 +2358,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        101 => {
+        105 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2225,7 +2385,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        102 => {
+        106 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2251,7 +2411,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        103 => {
+        107 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2277,7 +2437,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        104 => {
+        108 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2303,7 +2463,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        105 => {
+        109 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2329,7 +2489,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        106 => {
+        110 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2355,7 +2515,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        107 => {
+        111 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2381,7 +2541,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        108 => {
+        112 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2407,7 +2567,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        109 => {
+        113 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2433,7 +2593,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        110 => {
+        114 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2459,7 +2619,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        111 => {
+        115 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2485,7 +2645,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        112 => {
+        116 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2511,7 +2671,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        113 => {
+        117 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2537,7 +2697,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        114 => {
+        118 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2563,7 +2723,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        115 => {
+        119 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2589,7 +2749,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        116 => {
+        120 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2615,7 +2775,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        117 => {
+        121 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2641,7 +2801,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        118 => {
+        122 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2667,7 +2827,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        119 => {
+        123 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2693,7 +2853,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        120 => {
+        124 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2719,7 +2879,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        121 => {
+        125 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2745,7 +2905,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        122 => {
+        126 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2771,7 +2931,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        123 => {
+        127 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2797,7 +2957,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        124 => {
+        128 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -2823,7 +2983,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        125 => {
+        129 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Bang
@@ -2846,7 +3006,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        126 => {
+        130 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Minus
@@ -2869,7 +3029,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        127 => {
+        131 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: MinusPercent
@@ -2892,7 +3052,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        128 => {
+        132 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Tilde
@@ -2915,7 +3075,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        129 => {
+        133 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Ampersand
@@ -2938,7 +3098,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        130 => {
+        134 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_async
@@ -2961,7 +3121,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        131 => {
+        135 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_try
@@ -2984,7 +3144,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        132 => {
+        136 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_await
@@ -3007,7 +3167,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        133 => {
+        137 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_comptime
@@ -3029,7 +3189,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        134 => {
+        138 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: AsmExpr
@@ -3040,7 +3200,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
             return TerminalId.Expr;
         },
-        135 => {
+        139 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_resume
@@ -3063,7 +3223,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        136 => {
+        140 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_cancel
@@ -3086,7 +3246,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        137 => {
+        141 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_break
@@ -3104,7 +3264,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        138 => {
+        142 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_break
@@ -3126,7 +3286,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        139 => {
+        143 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_break
@@ -3149,7 +3309,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        140 => {
+        144 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_break
@@ -3174,7 +3334,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        141 => {
+        145 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_continue
@@ -3192,7 +3352,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        142 => {
+        146 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_continue
@@ -3214,7 +3374,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        143 => {
+        147 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_return
@@ -3232,7 +3392,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        144 => {
+        148 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_return
@@ -3255,7 +3415,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        145 => {
+        149 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -3280,7 +3440,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        146 => {
+        150 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -3319,7 +3479,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        147 => {
+        151 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: QuestionMark
@@ -3342,7 +3502,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        148 => {
+        152 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_promise
@@ -3359,7 +3519,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        149 => {
+        153 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_promise
@@ -3383,7 +3543,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        150 => {
+        154 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: LBracket
@@ -3410,7 +3570,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        151 => {
+        155 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: LBracket
@@ -3443,7 +3603,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        152 => {
+        156 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Asterisk
@@ -3474,7 +3634,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        153 => {
+        157 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: AsteriskAsterisk
@@ -3510,7 +3670,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        154 => {
+        158 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: BracketStarBracket
@@ -3541,7 +3701,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        155 => {
+        159 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: BracketStarCBracket
@@ -3572,7 +3732,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        156 => {
+        160 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: BlockExpr
@@ -3583,7 +3743,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
             return TerminalId.Expr;
         },
-        157 => {
+        161 => {
             // Symbol: BlockExpr
             var result: *Node = undefined;
             // Symbol: Block
@@ -3598,7 +3758,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.BlockExpr;
         },
-        158 => {
+        162 => {
             // Symbol: BlockExpr
             var result: *Node = undefined;
             // Symbol: BlockLabel
@@ -3618,7 +3778,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.BlockExpr;
         },
-        159 => {
+        163 => {
             // Symbol: Block
             var result: *Node.Block = undefined;
             // Symbol: LBrace
@@ -3643,7 +3803,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Block;
         },
-        160 => {
+        164 => {
             // Symbol: BlockLabel
             var result: *Token = undefined;
             // Symbol: Identifier
@@ -3662,7 +3822,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.BlockLabel;
         },
-        161 => {
+        165 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -3688,7 +3848,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        162 => {
+        166 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Identifier
@@ -3705,7 +3865,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        163 => {
+        167 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: CharLiteral
@@ -3722,7 +3882,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        164 => {
+        168 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: FloatLiteral
@@ -3739,7 +3899,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        165 => {
+        169 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: IntegerLiteral
@@ -3756,7 +3916,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        166 => {
+        170 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: StringLiteral
@@ -3773,7 +3933,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        167 => {
+        171 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: MultilineStringLiteral
@@ -3790,7 +3950,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        168 => {
+        172 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: MultilineCStringLiteral
@@ -3807,7 +3967,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        169 => {
+        173 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Period
@@ -3829,7 +3989,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        170 => {
+        174 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_error
@@ -3859,7 +4019,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        171 => {
+        175 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_error
@@ -3884,7 +4044,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        172 => {
+        176 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_error
@@ -3913,7 +4073,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        173 => {
+        177 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_false
@@ -3930,7 +4090,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        174 => {
+        178 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_true
@@ -3947,7 +4107,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        175 => {
+        179 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_null
@@ -3964,7 +4124,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        176 => {
+        180 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_undefined
@@ -3981,7 +4141,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        177 => {
+        181 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Keyword_unreachable
@@ -3998,7 +4158,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        178 => {
+        182 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: SwitchExpr
@@ -4009,7 +4169,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
             return TerminalId.Expr;
         },
-        179 => {
+        183 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: IfPrefix
@@ -4029,7 +4189,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        180 => {
+        184 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: IfPrefix
@@ -4060,7 +4220,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        181 => {
+        185 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Builtin
@@ -4087,7 +4247,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        182 => {
+        186 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: FnProto
@@ -4102,7 +4262,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        183 => {
+        187 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -4129,7 +4289,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        184 => {
+        188 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -4158,7 +4318,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        185 => {
+        189 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -4189,7 +4349,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        186 => {
+        190 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -4217,7 +4377,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        187 => {
+        191 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -4240,7 +4400,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        188 => {
+        192 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -4263,7 +4423,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        189 => {
+        193 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: Expr
@@ -4290,7 +4450,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.Expr;
         },
-        190 => {
+        194 => {
             // Symbol: Expr
             var result: *Node = undefined;
             // Symbol: ContainerDecl
@@ -4301,11 +4461,40 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .Expr };
             return TerminalId.Expr;
         },
-        191 => {
+        195 => {
             // Symbol: ContainerDecl
             var result: *Node = undefined;
-            // Symbol: MaybeExternPacked
-            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 5].item);
+            // Symbol: ContainerDeclOp
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 4].item).?;
+            // Symbol: LBrace
+            const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 3].item).?;
+            // Symbol: MaybeContainerMembers
+            const arg3 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 2].item);
+            // Symbol: RBrace
+            const arg4 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
+
+            // Adjust the parse stack and current state
+            parser.stack.len -= 3;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                const node = try parser.createNode(Node.ContainerDecl);
+                node.kind_token = arg1;
+                node.init_arg_expr = .None;
+                node.lbrace_token = arg2;
+                node.fields_and_decls = if (arg3) |p| p.* else NodeList.init(parser.allocator);
+                node.rbrace_token = arg4;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.ContainerDecl;
+        },
+        196 => {
+            // Symbol: ContainerDecl
+            var result: *Node = undefined;
+            // Symbol: ExternPacked
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 5].item).?;
             // Symbol: ContainerDeclOp
             const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 4].item).?;
             // Symbol: LBrace
@@ -4333,11 +4522,42 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDecl;
         },
-        192 => {
+        197 => {
             // Symbol: ContainerDecl
             var result: *Node = undefined;
-            // Symbol: MaybeExternPacked
-            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 6].item);
+            // Symbol: Keyword_enum
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 5].item).?;
+            // Symbol: ContainerDeclTypeType
+            const arg2 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 4].item).?;
+            // Symbol: LBrace
+            const arg3 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 3].item).?;
+            // Symbol: MaybeContainerMembers
+            const arg4 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 2].item);
+            // Symbol: RBrace
+            const arg5 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
+
+            // Adjust the parse stack and current state
+            parser.stack.len -= 4;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                const node = try parser.createNode(Node.ContainerDecl);
+                node.kind_token = arg1;
+                node.init_arg_expr = Node.ContainerDecl.InitArg{ .Type = arg2 };
+                node.lbrace_token = arg3;
+                node.fields_and_decls = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+                node.rbrace_token = arg5;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.ContainerDecl;
+        },
+        198 => {
+            // Symbol: ContainerDecl
+            var result: *Node = undefined;
+            // Symbol: ExternPacked
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 6].item).?;
             // Symbol: Keyword_enum
             const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 5].item).?;
             // Symbol: ContainerDeclTypeType
@@ -4367,11 +4587,42 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDecl;
         },
-        193 => {
+        199 => {
             // Symbol: ContainerDecl
             var result: *Node = undefined;
-            // Symbol: MaybeExternPacked
-            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 6].item);
+            // Symbol: Keyword_union
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 5].item).?;
+            // Symbol: ContainerDeclTypeType
+            const arg2 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 4].item).?;
+            // Symbol: LBrace
+            const arg3 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 3].item).?;
+            // Symbol: MaybeContainerMembers
+            const arg4 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 2].item);
+            // Symbol: RBrace
+            const arg5 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
+
+            // Adjust the parse stack and current state
+            parser.stack.len -= 4;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                const node = try parser.createNode(Node.ContainerDecl);
+                node.kind_token = arg1;
+                node.init_arg_expr = Node.ContainerDecl.InitArg{ .Type = arg2 };
+                node.lbrace_token = arg3;
+                node.fields_and_decls = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+                node.rbrace_token = arg5;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.ContainerDecl;
+        },
+        200 => {
+            // Symbol: ContainerDecl
+            var result: *Node = undefined;
+            // Symbol: ExternPacked
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 6].item).?;
             // Symbol: Keyword_union
             const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 5].item).?;
             // Symbol: ContainerDeclTypeType
@@ -4401,11 +4652,42 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDecl;
         },
-        194 => {
+        201 => {
             // Symbol: ContainerDecl
             var result: *Node = undefined;
-            // Symbol: MaybeExternPacked
-            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 6].item);
+            // Symbol: Keyword_union
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 5].item).?;
+            // Symbol: ContainerDeclTypeEnum
+            const arg2 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 4].item);
+            // Symbol: LBrace
+            const arg3 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 3].item).?;
+            // Symbol: MaybeContainerMembers
+            const arg4 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 2].item);
+            // Symbol: RBrace
+            const arg5 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
+
+            // Adjust the parse stack and current state
+            parser.stack.len -= 4;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                const node = try parser.createNode(Node.ContainerDecl);
+                node.kind_token = arg1;
+                node.init_arg_expr = Node.ContainerDecl.InitArg{ .Enum = arg2 };
+                node.lbrace_token = arg3;
+                node.fields_and_decls = if (arg4) |p| p.* else NodeList.init(parser.allocator);
+                node.rbrace_token = arg5;
+                result = &node.base;
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDecl };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.ContainerDecl;
+        },
+        202 => {
+            // Symbol: ContainerDecl
+            var result: *Node = undefined;
+            // Symbol: ExternPacked
+            const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 6].item).?;
             // Symbol: Keyword_union
             const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 5].item).?;
             // Symbol: ContainerDeclTypeEnum
@@ -4435,37 +4717,29 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDecl;
         },
-        195 => {
-            // Symbol: MaybeExternPacked
-            var result: ?*Token = null;
-
-            // Push the result of the reduce action
-            try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeExternPacked } });
-            return TerminalId.MaybeExternPacked;
-        },
-        196 => {
-            // Symbol: MaybeExternPacked
-            var result: ?*Token = null;
+        203 => {
+            // Symbol: ExternPacked
+            var result: *Token = undefined;
             // Symbol: Keyword_extern
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
             parser.state = parser.stack.items[parser.stack.len - 1].state;
             parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeExternPacked };
-            return TerminalId.MaybeExternPacked;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ExternPacked };
+            return TerminalId.ExternPacked;
         },
-        197 => {
-            // Symbol: MaybeExternPacked
-            var result: ?*Token = null;
+        204 => {
+            // Symbol: ExternPacked
+            var result: *Token = undefined;
             // Symbol: Keyword_packed
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
             parser.state = parser.stack.items[parser.stack.len - 1].state;
             parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeExternPacked };
-            return TerminalId.MaybeExternPacked;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ExternPacked };
+            return TerminalId.ExternPacked;
         },
-        198 => {
+        205 => {
             // Symbol: SwitchExpr
             var result: *Node = undefined;
             // Symbol: Keyword_switch
@@ -4501,7 +4775,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchExpr;
         },
-        199 => {
+        206 => {
             // Symbol: String
             var result: *Node = undefined;
             // Symbol: StringLiteral
@@ -4518,7 +4792,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.String;
         },
-        200 => {
+        207 => {
             // Symbol: String
             var result: *Node = undefined;
             // Symbol: MultilineStringLiteral
@@ -4535,7 +4809,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.String;
         },
-        201 => {
+        208 => {
             // Symbol: String
             var result: *Node = undefined;
             // Symbol: MultilineCStringLiteral
@@ -4552,7 +4826,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.String;
         },
-        202 => {
+        209 => {
             // Symbol: AsmExpr
             var result: *Node = undefined;
             // Symbol: Keyword_asm
@@ -4585,7 +4859,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmExpr;
         },
-        203 => {
+        210 => {
             // Symbol: AsmExpr
             var result: *Node = undefined;
             // Symbol: Keyword_asm
@@ -4620,7 +4894,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmExpr;
         },
-        204 => {
+        211 => {
             // Symbol: AsmExpr
             var result: *Node = undefined;
             // Symbol: Keyword_asm
@@ -4657,7 +4931,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmExpr;
         },
-        205 => {
+        212 => {
             // Symbol: AsmExpr
             var result: *Node = undefined;
             // Symbol: Keyword_asm
@@ -4696,7 +4970,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmExpr;
         },
-        206 => {
+        213 => {
             // Symbol: AsmOutput
             var result: ?*NodeList = null;
             // Symbol: Colon
@@ -4711,7 +4985,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmOutput;
         },
-        207 => {
+        214 => {
             // Symbol: AsmOutput
             var result: ?*NodeList = null;
             // Symbol: Colon
@@ -4730,7 +5004,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmOutput;
         },
-        208 => {
+        215 => {
             // Symbol: AsmOutputItem
             var result: *Node = undefined;
             // Symbol: LBracket
@@ -4769,7 +5043,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmOutputItem;
         },
-        209 => {
+        216 => {
             // Symbol: AsmOutputItem
             var result: *Node = undefined;
             // Symbol: LBracket
@@ -4808,7 +5082,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmOutputItem;
         },
-        210 => {
+        217 => {
             // Symbol: AsmInput
             var result: ?*NodeList = null;
             // Symbol: Colon
@@ -4823,7 +5097,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmInput;
         },
-        211 => {
+        218 => {
             // Symbol: AsmInput
             var result: ?*NodeList = null;
             // Symbol: Colon
@@ -4842,7 +5116,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmInput;
         },
-        212 => {
+        219 => {
             // Symbol: AsmInputItem
             var result: *Node = undefined;
             // Symbol: LBracket
@@ -4879,7 +5153,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmInputItem;
         },
-        213 => {
+        220 => {
             // Symbol: AsmClobber
             var result: ?*NodeList = null;
             // Symbol: Colon
@@ -4894,7 +5168,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmClobber;
         },
-        214 => {
+        221 => {
             // Symbol: AsmClobber
             var result: ?*NodeList = null;
             // Symbol: Colon
@@ -4913,7 +5187,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.AsmClobber;
         },
-        215 => {
+        222 => {
             // Symbol: BreakLabel
             var result: *Node = undefined;
             // Symbol: Colon
@@ -4934,7 +5208,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.BreakLabel;
         },
-        216 => {
+        223 => {
             // Symbol: MaybeLinkSection
             var result: ?*Node = null;
 
@@ -4942,7 +5216,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeLinkSection } });
             return TerminalId.MaybeLinkSection;
         },
-        217 => {
+        224 => {
             // Symbol: MaybeLinkSection
             var result: ?*Node = null;
             // Symbol: Keyword_linksection
@@ -4965,59 +5239,51 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeLinkSection;
         },
-        218 => {
-            // Symbol: MaybeFnCC
-            var result: ?*Token = null;
-
-            // Push the result of the reduce action
-            try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeFnCC } });
-            return TerminalId.MaybeFnCC;
-        },
-        219 => {
-            // Symbol: MaybeFnCC
-            var result: ?*Token = null;
+        225 => {
+            // Symbol: FnCC
+            var result: *Token = undefined;
             // Symbol: Keyword_nakedcc
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
             parser.state = parser.stack.items[parser.stack.len - 1].state;
             parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeFnCC };
-            return TerminalId.MaybeFnCC;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnCC };
+            return TerminalId.FnCC;
         },
-        220 => {
-            // Symbol: MaybeFnCC
-            var result: ?*Token = null;
+        226 => {
+            // Symbol: FnCC
+            var result: *Token = undefined;
             // Symbol: Keyword_stdcallcc
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
             parser.state = parser.stack.items[parser.stack.len - 1].state;
             parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeFnCC };
-            return TerminalId.MaybeFnCC;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnCC };
+            return TerminalId.FnCC;
         },
-        221 => {
-            // Symbol: MaybeFnCC
-            var result: ?*Token = null;
+        227 => {
+            // Symbol: FnCC
+            var result: *Token = undefined;
             // Symbol: Keyword_extern
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
             parser.state = parser.stack.items[parser.stack.len - 1].state;
             parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeFnCC };
-            return TerminalId.MaybeFnCC;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnCC };
+            return TerminalId.FnCC;
         },
-        222 => {
-            // Symbol: MaybeFnCC
-            var result: ?*Token = null;
+        228 => {
+            // Symbol: FnCC
+            var result: *Token = undefined;
             // Symbol: Keyword_async
             const arg1 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 1].item).?;
 
             parser.state = parser.stack.items[parser.stack.len - 1].state;
             parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeFnCC };
-            return TerminalId.MaybeFnCC;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .FnCC };
+            return TerminalId.FnCC;
         },
-        223 => {
+        229 => {
             // Symbol: ParamDecl
             var result: *Node.ParamDecl = undefined;
             // Symbol: MaybeNoalias
@@ -5037,7 +5303,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamDecl;
         },
-        224 => {
+        230 => {
             // Symbol: ParamDecl
             var result: *Node.ParamDecl = undefined;
             // Symbol: MaybeNoalias
@@ -5062,7 +5328,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamDecl;
         },
-        225 => {
+        231 => {
             // Symbol: ParamDecl
             var result: *Node.ParamDecl = undefined;
             // Symbol: MaybeNoalias
@@ -5090,7 +5356,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamDecl;
         },
-        226 => {
+        232 => {
             // Symbol: ParamType
             var result: *Node.ParamDecl = undefined;
             // Symbol: Keyword_var
@@ -5109,7 +5375,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamType;
         },
-        227 => {
+        233 => {
             // Symbol: ParamType
             var result: *Node.ParamDecl = undefined;
             // Symbol: Ellipsis3
@@ -5126,7 +5392,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamType;
         },
-        228 => {
+        234 => {
             // Symbol: ParamType
             var result: *Node.ParamDecl = undefined;
             // Symbol: Expr
@@ -5143,7 +5409,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamType;
         },
-        229 => {
+        235 => {
             // Symbol: IfPrefix
             var result: *Node.If = undefined;
             // Symbol: Keyword_if
@@ -5172,7 +5438,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.IfPrefix;
         },
-        230 => {
+        236 => {
             // Symbol: ForPrefix
             var result: *Node.For = undefined;
             // Symbol: Keyword_for
@@ -5201,7 +5467,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ForPrefix;
         },
-        231 => {
+        237 => {
             // Symbol: WhilePrefix
             var result: *Node.While = undefined;
             // Symbol: Keyword_while
@@ -5230,7 +5496,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhilePrefix;
         },
-        232 => {
+        238 => {
             // Symbol: WhilePrefix
             var result: *Node.While = undefined;
             // Symbol: Keyword_while
@@ -5268,7 +5534,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.WhilePrefix;
         },
-        233 => {
+        239 => {
             // Symbol: MaybePayload
             var result: ?*Node = null;
 
@@ -5276,7 +5542,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybePayload } });
             return TerminalId.MaybePayload;
         },
-        234 => {
+        240 => {
             // Symbol: MaybePayload
             var result: ?*Node = null;
             // Symbol: Pipe
@@ -5303,7 +5569,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybePayload;
         },
-        235 => {
+        241 => {
             // Symbol: MaybePtrPayload
             var result: ?*Node = null;
 
@@ -5311,7 +5577,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybePtrPayload } });
             return TerminalId.MaybePtrPayload;
         },
-        236 => {
+        242 => {
             // Symbol: MaybePtrPayload
             var result: ?*Node = null;
             // Symbol: Pipe
@@ -5338,7 +5604,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybePtrPayload;
         },
-        237 => {
+        243 => {
             // Symbol: MaybePtrPayload
             var result: ?*Node = null;
             // Symbol: Pipe
@@ -5368,7 +5634,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybePtrPayload;
         },
-        238 => {
+        244 => {
             // Symbol: PtrIndexPayload
             var result: *Node = undefined;
             // Symbol: Pipe
@@ -5395,7 +5661,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.PtrIndexPayload;
         },
-        239 => {
+        245 => {
             // Symbol: PtrIndexPayload
             var result: *Node = undefined;
             // Symbol: Pipe
@@ -5425,7 +5691,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.PtrIndexPayload;
         },
-        240 => {
+        246 => {
             // Symbol: PtrIndexPayload
             var result: *Node = undefined;
             // Symbol: Pipe
@@ -5459,7 +5725,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.PtrIndexPayload;
         },
-        241 => {
+        247 => {
             // Symbol: PtrIndexPayload
             var result: *Node = undefined;
             // Symbol: Pipe
@@ -5496,7 +5762,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.PtrIndexPayload;
         },
-        242 => {
+        248 => {
             // Symbol: SwitchProng
             var result: *Node = undefined;
             // Symbol: SwitchCase
@@ -5522,7 +5788,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchProng;
         },
-        243 => {
+        249 => {
             // Symbol: SwitchCase
             var result: *Node.SwitchCase = undefined;
             // Symbol: Keyword_else
@@ -5542,7 +5808,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchCase;
         },
-        244 => {
+        250 => {
             // Symbol: SwitchCase
             var result: *Node.SwitchCase = undefined;
             // Symbol: SwitchItems
@@ -5563,7 +5829,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchCase;
         },
-        245 => {
+        251 => {
             // Symbol: SwitchItems
             var result: *NodeList = undefined;
             // Symbol: SwitchItem
@@ -5578,7 +5844,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchItems;
         },
-        246 => {
+        252 => {
             // Symbol: SwitchItems
             var result: *NodeList = undefined;
             // Symbol: SwitchItems
@@ -5600,7 +5866,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchItems;
         },
-        247 => {
+        253 => {
             // Symbol: SwitchItem
             var result: *Node = undefined;
             // Symbol: Expr
@@ -5611,7 +5877,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchItem };
             return TerminalId.SwitchItem;
         },
-        248 => {
+        254 => {
             // Symbol: SwitchItem
             var result: *Node = undefined;
             // Symbol: Expr
@@ -5637,7 +5903,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.SwitchItem;
         },
-        249 => {
+        255 => {
             // Symbol: MaybeVolatile
             var result: ?*Token = null;
 
@@ -5645,7 +5911,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeVolatile } });
             return TerminalId.MaybeVolatile;
         },
-        250 => {
+        256 => {
             // Symbol: MaybeVolatile
             var result: ?*Token = null;
             // Symbol: Keyword_volatile
@@ -5656,7 +5922,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeVolatile };
             return TerminalId.MaybeVolatile;
         },
-        251 => {
+        257 => {
             // Symbol: MaybeAllowzero
             var result: ?*Token = null;
 
@@ -5664,7 +5930,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeAllowzero } });
             return TerminalId.MaybeAllowzero;
         },
-        252 => {
+        258 => {
             // Symbol: MaybeAllowzero
             var result: ?*Token = null;
             // Symbol: Keyword_allowzero
@@ -5675,7 +5941,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeAllowzero };
             return TerminalId.MaybeAllowzero;
         },
-        253 => {
+        259 => {
             // Symbol: ContainerDeclTypeEnum
             var result: ?*Node = null;
             // Symbol: LParen
@@ -5693,7 +5959,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDeclTypeEnum;
         },
-        254 => {
+        260 => {
             // Symbol: ContainerDeclTypeEnum
             var result: ?*Node = null;
             // Symbol: LParen
@@ -5720,7 +5986,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDeclTypeEnum;
         },
-        255 => {
+        261 => {
             // Symbol: ContainerDeclTypeType
             var result: *Node = undefined;
             // Symbol: LParen
@@ -5741,7 +6007,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ContainerDeclTypeType;
         },
-        256 => {
+        262 => {
             // Symbol: ContainerDeclOp
             var result: *Token = undefined;
             // Symbol: Keyword_struct
@@ -5752,7 +6018,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDeclOp };
             return TerminalId.ContainerDeclOp;
         },
-        257 => {
+        263 => {
             // Symbol: ContainerDeclOp
             var result: *Token = undefined;
             // Symbol: Keyword_union
@@ -5763,7 +6029,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDeclOp };
             return TerminalId.ContainerDeclOp;
         },
-        258 => {
+        264 => {
             // Symbol: ContainerDeclOp
             var result: *Token = undefined;
             // Symbol: Keyword_enum
@@ -5774,7 +6040,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .ContainerDeclOp };
             return TerminalId.ContainerDeclOp;
         },
-        259 => {
+        265 => {
             // Symbol: MaybeByteAlign
             var result: ?*Node = null;
 
@@ -5782,7 +6048,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeByteAlign } });
             return TerminalId.MaybeByteAlign;
         },
-        260 => {
+        266 => {
             // Symbol: MaybeByteAlign
             var result: ?*Node = null;
             // Symbol: Keyword_align
@@ -5805,7 +6071,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeByteAlign;
         },
-        261 => {
+        267 => {
             // Symbol: MaybeAlign
             var result: ?*Node.PrefixOp.PtrInfo.Align = null;
 
@@ -5813,7 +6079,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeAlign } });
             return TerminalId.MaybeAlign;
         },
-        262 => {
+        268 => {
             // Symbol: MaybeAlign
             var result: ?*Node.PrefixOp.PtrInfo.Align = null;
             // Symbol: Keyword_align
@@ -5838,7 +6104,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeAlign;
         },
-        263 => {
+        269 => {
             // Symbol: MaybeAlign
             var result: ?*Node.PrefixOp.PtrInfo.Align = null;
             // Symbol: Keyword_align
@@ -5876,7 +6142,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeAlign;
         },
-        264 => {
+        270 => {
             // Symbol: MaybeAlign
             var result: ?*Node.PrefixOp.PtrInfo.Align = null;
             // Symbol: Keyword_align
@@ -5916,7 +6182,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeAlign;
         },
-        265 => {
+        271 => {
             // Symbol: ErrorTagList
             var result: *NodeList = undefined;
             // Symbol: MaybeDocComment
@@ -5938,7 +6204,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ErrorTagList;
         },
-        266 => {
+        272 => {
             // Symbol: ErrorTagList
             var result: *NodeList = undefined;
             // Symbol: ErrorTagList
@@ -5965,118 +6231,118 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ErrorTagList;
         },
-        267 => {
-            // Symbol: SwitchProngList
-            var result: *NodeList = undefined;
-            // Symbol: SwitchProng
-            const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
-
-            parser.state = parser.stack.items[parser.stack.len - 1].state;
-            {
-                result = try parser.createListWithNode(NodeList, arg1);
-            }
-            parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchProngList };
-            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
-            return TerminalId.SwitchProngList;
-        },
-        268 => {
-            // Symbol: SwitchProngList
-            var result: *NodeList = undefined;
-            // Symbol: SwitchProngList
-            const arg1 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 3].item).?;
-            // Symbol: Comma
-            const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 2].item).?;
-            // Symbol: SwitchProng
-            const arg3 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
-
-            // Adjust the parse stack and current state
-            parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len - 1].state;
-            {
-                result = arg1;
-                try arg1.append(arg3);
-            }
-            parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchProngList };
-            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
-            return TerminalId.SwitchProngList;
-        },
-        269 => {
-            // Symbol: AsmOutputList
-            var result: *NodeList = undefined;
-            // Symbol: AsmOutputItem
-            const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
-
-            parser.state = parser.stack.items[parser.stack.len - 1].state;
-            {
-                result = try parser.createListWithNode(NodeList, arg1);
-            }
-            parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmOutputList };
-            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
-            return TerminalId.AsmOutputList;
-        },
-        270 => {
-            // Symbol: AsmOutputList
-            var result: *NodeList = undefined;
-            // Symbol: AsmOutputList
-            const arg1 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 3].item).?;
-            // Symbol: Comma
-            const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 2].item).?;
-            // Symbol: AsmOutputItem
-            const arg3 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
-
-            // Adjust the parse stack and current state
-            parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len - 1].state;
-            {
-                result = arg1;
-                try arg1.append(arg3);
-            }
-            parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmOutputList };
-            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
-            return TerminalId.AsmOutputList;
-        },
-        271 => {
-            // Symbol: AsmInputList
-            var result: *NodeList = undefined;
-            // Symbol: AsmInputItem
-            const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
-
-            parser.state = parser.stack.items[parser.stack.len - 1].state;
-            {
-                result = try parser.createListWithNode(NodeList, arg1);
-            }
-            parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmInputList };
-            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
-            return TerminalId.AsmInputList;
-        },
-        272 => {
-            // Symbol: AsmInputList
-            var result: *NodeList = undefined;
-            // Symbol: AsmInputList
-            const arg1 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 3].item).?;
-            // Symbol: Comma
-            const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 2].item).?;
-            // Symbol: AsmInputItem
-            const arg3 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
-
-            // Adjust the parse stack and current state
-            parser.stack.len -= 2;
-            parser.state = parser.stack.items[parser.stack.len - 1].state;
-            {
-                result = arg1;
-                try arg1.append(arg3);
-            }
-            parser.stack.items[parser.stack.len - 1].state = parser.state;
-            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmInputList };
-            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
-            return TerminalId.AsmInputList;
-        },
         273 => {
+            // Symbol: SwitchProngList
+            var result: *NodeList = undefined;
+            // Symbol: SwitchProng
+            const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
+
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                result = try parser.createListWithNode(NodeList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchProngList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.SwitchProngList;
+        },
+        274 => {
+            // Symbol: SwitchProngList
+            var result: *NodeList = undefined;
+            // Symbol: SwitchProngList
+            const arg1 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 3].item).?;
+            // Symbol: Comma
+            const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 2].item).?;
+            // Symbol: SwitchProng
+            const arg3 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
+
+            // Adjust the parse stack and current state
+            parser.stack.len -= 2;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                result = arg1;
+                try arg1.append(arg3);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .SwitchProngList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.SwitchProngList;
+        },
+        275 => {
+            // Symbol: AsmOutputList
+            var result: *NodeList = undefined;
+            // Symbol: AsmOutputItem
+            const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
+
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                result = try parser.createListWithNode(NodeList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmOutputList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.AsmOutputList;
+        },
+        276 => {
+            // Symbol: AsmOutputList
+            var result: *NodeList = undefined;
+            // Symbol: AsmOutputList
+            const arg1 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 3].item).?;
+            // Symbol: Comma
+            const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 2].item).?;
+            // Symbol: AsmOutputItem
+            const arg3 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
+
+            // Adjust the parse stack and current state
+            parser.stack.len -= 2;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                result = arg1;
+                try arg1.append(arg3);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmOutputList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.AsmOutputList;
+        },
+        277 => {
+            // Symbol: AsmInputList
+            var result: *NodeList = undefined;
+            // Symbol: AsmInputItem
+            const arg1 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
+
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                result = try parser.createListWithNode(NodeList, arg1);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmInputList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.AsmInputList;
+        },
+        278 => {
+            // Symbol: AsmInputList
+            var result: *NodeList = undefined;
+            // Symbol: AsmInputList
+            const arg1 = @intToPtr(?*NodeList, parser.stack.items[parser.stack.len - 3].item).?;
+            // Symbol: Comma
+            const arg2 = @intToPtr(?*Token, parser.stack.items[parser.stack.len - 2].item).?;
+            // Symbol: AsmInputItem
+            const arg3 = @intToPtr(?*Node, parser.stack.items[parser.stack.len - 1].item).?;
+
+            // Adjust the parse stack and current state
+            parser.stack.len -= 2;
+            parser.state = parser.stack.items[parser.stack.len - 1].state;
+            {
+                result = arg1;
+                try arg1.append(arg3);
+            }
+            parser.stack.items[parser.stack.len - 1].state = parser.state;
+            parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .AsmInputList };
+            parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
+            return TerminalId.AsmInputList;
+        },
+        279 => {
             // Symbol: StringList
             var result: *NodeList = undefined;
             // Symbol: StringLiteral
@@ -6093,7 +6359,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.StringList;
         },
-        274 => {
+        280 => {
             // Symbol: StringList
             var result: *NodeList = undefined;
             // Symbol: StringList
@@ -6117,7 +6383,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.StringList;
         },
-        275 => {
+        281 => {
             // Symbol: MaybeParamDeclList
             var result: ?*NodeList = null;
 
@@ -6125,7 +6391,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeParamDeclList } });
             return TerminalId.MaybeParamDeclList;
         },
-        276 => {
+        282 => {
             // Symbol: MaybeParamDeclList
             var result: *NodeList = undefined;
             // Symbol: ParamDeclList
@@ -6144,7 +6410,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeParamDeclList;
         },
-        277 => {
+        283 => {
             // Symbol: ParamDeclList
             var result: *NodeList = undefined;
             // Symbol: MaybeDocComment
@@ -6164,7 +6430,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamDeclList;
         },
-        278 => {
+        284 => {
             // Symbol: ParamDeclList
             var result: *NodeList = undefined;
             // Symbol: ParamDeclList
@@ -6189,7 +6455,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ParamDeclList;
         },
-        279 => {
+        285 => {
             // Symbol: MaybeExprList
             var result: ?*NodeList = null;
 
@@ -6197,7 +6463,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeExprList } });
             return TerminalId.MaybeExprList;
         },
-        280 => {
+        286 => {
             // Symbol: MaybeExprList
             var result: ?*NodeList = null;
             // Symbol: ExprList
@@ -6216,7 +6482,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeExprList;
         },
-        281 => {
+        287 => {
             // Symbol: ExprList
             var result: *NodeList = undefined;
             // Symbol: Expr
@@ -6231,7 +6497,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ExprList;
         },
-        282 => {
+        288 => {
             // Symbol: ExprList
             var result: *NodeList = undefined;
             // Symbol: ExprList
@@ -6253,7 +6519,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.ExprList;
         },
-        283 => {
+        289 => {
             // Symbol: InitList
             var result: *NodeList = undefined;
             // Symbol: Expr
@@ -6268,7 +6534,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.InitList;
         },
-        284 => {
+        290 => {
             // Symbol: InitList
             var result: *NodeList = undefined;
             // Symbol: Period
@@ -6295,7 +6561,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.InitList;
         },
-        285 => {
+        291 => {
             // Symbol: InitList
             var result: *NodeList = undefined;
             // Symbol: InitList
@@ -6317,7 +6583,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.InitList;
         },
-        286 => {
+        292 => {
             // Symbol: InitList
             var result: *NodeList = undefined;
             // Symbol: InitList
@@ -6349,7 +6615,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.InitList;
         },
-        287 => {
+        293 => {
             // Symbol: MaybePub
             var result: ?*Token = null;
 
@@ -6357,7 +6623,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybePub } });
             return TerminalId.MaybePub;
         },
-        288 => {
+        294 => {
             // Symbol: MaybePub
             var result: ?*Token = null;
             // Symbol: Keyword_pub
@@ -6368,7 +6634,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybePub };
             return TerminalId.MaybePub;
         },
-        289 => {
+        295 => {
             // Symbol: MaybeColonTypeExpr
             var result: ?*Node = null;
 
@@ -6376,7 +6642,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeColonTypeExpr } });
             return TerminalId.MaybeColonTypeExpr;
         },
-        290 => {
+        296 => {
             // Symbol: MaybeColonTypeExpr
             var result: ?*Node = null;
             // Symbol: Colon
@@ -6395,7 +6661,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MaybeColonTypeExpr;
         },
-        291 => {
+        297 => {
             // Symbol: MaybeExpr
             var result: ?*Node = null;
 
@@ -6403,7 +6669,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeExpr } });
             return TerminalId.MaybeExpr;
         },
-        292 => {
+        298 => {
             // Symbol: MaybeExpr
             var result: ?*Node = null;
             // Symbol: Expr
@@ -6414,7 +6680,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeExpr };
             return TerminalId.MaybeExpr;
         },
-        293 => {
+        299 => {
             // Symbol: MaybeNoalias
             var result: ?*Token = null;
 
@@ -6422,7 +6688,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeNoalias } });
             return TerminalId.MaybeNoalias;
         },
-        294 => {
+        300 => {
             // Symbol: MaybeNoalias
             var result: ?*Token = null;
             // Symbol: Keyword_noalias
@@ -6433,7 +6699,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeNoalias };
             return TerminalId.MaybeNoalias;
         },
-        295 => {
+        301 => {
             // Symbol: MaybeInline
             var result: ?*Token = null;
 
@@ -6441,7 +6707,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeInline } });
             return TerminalId.MaybeInline;
         },
-        296 => {
+        302 => {
             // Symbol: MaybeInline
             var result: ?*Token = null;
             // Symbol: Keyword_inline
@@ -6452,7 +6718,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeInline };
             return TerminalId.MaybeInline;
         },
-        297 => {
+        303 => {
             // Symbol: MaybeIdentifier
             var result: ?*Token = null;
 
@@ -6460,7 +6726,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeIdentifier } });
             return TerminalId.MaybeIdentifier;
         },
-        298 => {
+        304 => {
             // Symbol: MaybeIdentifier
             var result: ?*Token = null;
             // Symbol: Identifier
@@ -6471,7 +6737,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeIdentifier };
             return TerminalId.MaybeIdentifier;
         },
-        299 => {
+        305 => {
             // Symbol: MaybeComma
             var result: ?*Token = null;
 
@@ -6479,7 +6745,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeComma } });
             return TerminalId.MaybeComma;
         },
-        300 => {
+        306 => {
             // Symbol: MaybeComma
             var result: ?*Token = null;
             // Symbol: Comma
@@ -6490,7 +6756,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeComma };
             return TerminalId.MaybeComma;
         },
-        301 => {
+        307 => {
             // Symbol: MaybeConst
             var result: ?*Token = null;
 
@@ -6498,7 +6764,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             try parser.stack.append(StackItem{ .item = @ptrToInt(result), .state = state, .value = StackValue{ .Terminal = .MaybeConst } });
             return TerminalId.MaybeConst;
         },
-        302 => {
+        308 => {
             // Symbol: MaybeConst
             var result: ?*Token = null;
             // Symbol: Keyword_const
@@ -6509,7 +6775,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].value = StackValue{ .Terminal = .MaybeConst };
             return TerminalId.MaybeConst;
         },
-        303 => {
+        309 => {
             // Symbol: MultilineStringLiteral
             var result: *TokenList = undefined;
             // Symbol: LineString
@@ -6524,7 +6790,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MultilineStringLiteral;
         },
-        304 => {
+        310 => {
             // Symbol: MultilineStringLiteral
             var result: *TokenList = undefined;
             // Symbol: MultilineStringLiteral
@@ -6544,7 +6810,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MultilineStringLiteral;
         },
-        305 => {
+        311 => {
             // Symbol: MultilineCStringLiteral
             var result: *TokenList = undefined;
             // Symbol: LineCString
@@ -6559,7 +6825,7 @@ pub fn reduce_actions(comptime Parser: type, parser: *Parser, rule: isize, state
             parser.stack.items[parser.stack.len - 1].item = @ptrToInt(result);
             return TerminalId.MultilineCStringLiteral;
         },
-        306 => {
+        312 => {
             // Symbol: MultilineCStringLiteral
             var result: *TokenList = undefined;
             // Symbol: MultilineCStringLiteral
