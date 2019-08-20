@@ -25,7 +25,6 @@ const s = struct {
 fn notype(arg1: type) {
     const blagh = error{ fdsd, fds },
     blagh = if(true) if(dsa) dfs;
-
     blk: {};
     @This()
     for(fsdaf) {};

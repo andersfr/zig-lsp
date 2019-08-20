@@ -494,7 +494,9 @@ pub const Parser = struct {
                     try self.engine.reportError(ParseError.DiscardedLine, &self.tokens.items[i]);
 
                 self.engine.printStack();
-                while (i < self.tokens.len and self.tokens.items[i].id != .Newline) : (i += 1) {}
+                while (i < self.tokens.len and self.tokens.items[i].id != .Newline) : (i += 1) {
+                    self.tokens.items[i].line = last_newline;
+                }
                 if (resync_progress < i - 1) {
                     i -= 1;
                 }
@@ -506,6 +508,9 @@ pub const Parser = struct {
             try self.engine.reportError(ParseError.AbortedParse, token);
             break :parser_loop;
         }
+        // Aborted parse may overrun counter
+        if(i >= self.tokens.len) i = self.tokens.len-1;
+
         stack_trace("\n");
         if (self.engine.stack.len > 0) {
             const Root = @intToPtr(?*Node.Root, self.engine.stack.at(0).item) orelse {
