@@ -508,7 +508,12 @@ pub const Parser = struct {
         }
         stack_trace("\n");
         if (self.engine.stack.len > 0) {
-            const Root = @intToPtr(?*Node.Root, self.engine.stack.at(0).item) orelse return false;
+            const Root = @intToPtr(?*Node.Root, self.engine.stack.at(0).item) orelse {
+                if(self.engine.errors.len > 0 and self.engine.errors.at(self.engine.errors.len-1).info == .AbortedParse)
+                    return false;
+                try self.engine.reportError(ParseError.AbortedParse, &self.tokens.items[i]);
+                return false;
+            };
             if(shebang != 0)
                 Root.shebang_token = &self.tokens.items[1];
             Root.eof_token = &self.tokens.items[self.tokens.len - 1];

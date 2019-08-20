@@ -39,49 +39,50 @@ fn processSource(uri: []const u8, version: usize, source: []const u8) !void {
     var parser = try ZigParser.init(std.heap.c_allocator);
     defer parser.deinit();
 
-    if(try parser.run(source)) {
-        // try debug.stream.print("parsed {} v.{}\n", uri, version);
-        var buffer = try std.Buffer.initSize(std.heap.c_allocator, 0);
-        defer buffer.deinit();
+    // TODO: semantic analysis if parser succeeds
+    _ = try parser.run(source);
 
-        var stream = &std.io.BufferOutStream.init(&buffer).stream;
-        try stream.write(
-            \\{"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"uri":
-        );
-        try stream.print("\"{}\",\"diagnostics\":[", uri);
+    // try debug.stream.print("parsed {} v.{}\n", uri, version);
+    var buffer = try std.Buffer.initSize(std.heap.c_allocator, 0);
+    defer buffer.deinit();
 
-        if(parser.engine.errors.len > 0) {
-            var count: usize = 0;
-            var eit = parser.engine.errors.iterator(0);
-            // Diagnostic: { range, severity?: number, code?: number|string, source?: string, message: string, relatedInformation?: ... }
-            while(eit.next()) |err| {
-                try stream.write(
-                    \\{"range":{"start":{
-                );
-                try stream.print("\"line\":{},\"character\":{}", err.line-1, err.start-1);
-                try stream.write(
-                    \\},"end":{
-                );
-                try stream.print("\"line\":{},\"character\":{}", err.line-1, err.end);
-                try stream.write(
-                    \\}},"severity":1,"source":"zig-lsp","message":
-                );
-                try stream.print("\"{}\",\"code\":\"{}\"", parseErrorToString(err.info), @tagName(err.info));
-                try stream.write(
-                    \\,"relatedInformation":[]},
-                );
-                // try debug.stream.print("{}\n", err);
-            }
-            buffer.list.len -= 1;
+    var stream = &std.io.BufferOutStream.init(&buffer).stream;
+    try stream.write(
+        \\{"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"uri":
+    );
+    try stream.print("\"{}\",\"diagnostics\":[", uri);
+
+    if(parser.engine.errors.len > 0) {
+        var count: usize = 0;
+        var eit = parser.engine.errors.iterator(0);
+        // Diagnostic: { range, severity?: number, code?: number|string, source?: string, message: string, relatedInformation?: ... }
+        while(eit.next()) |err| {
+            try stream.write(
+                \\{"range":{"start":{
+            );
+            try stream.print("\"line\":{},\"character\":{}", err.line-1, err.start-1);
+            try stream.write(
+                \\},"end":{
+            );
+            try stream.print("\"line\":{},\"character\":{}", err.line-1, err.end);
+            try stream.write(
+                \\}},"severity":1,"source":"zig-lsp","message":
+            );
+            try stream.print("\"{}\",\"code\":\"{}\"", parseErrorToString(err.info), @tagName(err.info));
+            try stream.write(
+                \\,"relatedInformation":[]},
+            );
+            // try debug.stream.print("{}\n", err);
         }
-
-        try stream.write(
-            \\]}}
-        );
-
-        try stdout.stream.print("Content-Length: {}\r\n\r\n", buffer.len());
-        try stdout.stream.write(buffer.toSlice());
+        buffer.list.len -= 1;
     }
+
+    try stream.write(
+        \\]}}
+    );
+
+    try stdout.stream.print("Content-Length: {}\r\n\r\n", buffer.len());
+    try stdout.stream.write(buffer.toSlice());
 }
 
 fn sendGenericRpcResponse(rpc_id: usize, response: []const u8) !bool {

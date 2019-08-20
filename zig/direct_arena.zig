@@ -49,8 +49,6 @@ pub const DirectArena = struct {
         if (new_size == 0)
             return (([*]u8)(undefined))[0..0];
 
-        std.debug.assert(new_size <= std.mem.page_size - @sizeOf(DirectArena));
-
         const arena = @fieldParentPtr(DirectArena, "allocator", allocator).next;
 
         arena.offset = std.mem.alignForward(arena.offset, new_align);
