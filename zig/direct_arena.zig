@@ -36,7 +36,12 @@ pub const DirectArena = struct {
         while(ptr != self) {
             var cur = ptr;
             ptr = ptr.next;
-            os.munmap(@intToPtr([*]align(std.mem.page_size) u8, @ptrToInt(cur))[0..std.mem.page_size]);
+            if(cur.offset > std.mem.page_size) {
+                os.munmap(@intToPtr([*]align(std.mem.page_size) u8, @ptrToInt(cur))[0..cur.offset]);
+            }
+            else {
+                os.munmap(@intToPtr([*]align(std.mem.page_size) u8, @ptrToInt(cur))[0..std.mem.page_size]);
+            }
         }
         os.munmap(@intToPtr([*]align(std.mem.page_size) u8, @ptrToInt(self))[0..std.mem.page_size]);
     }
@@ -49,43 +54,65 @@ pub const DirectArena = struct {
         if (new_size == 0)
             return (([*]u8)(undefined))[0..0];
 
-        const arena = @fieldParentPtr(DirectArena, "allocator", allocator).next;
+        const direct_allocator = @fieldParentPtr(DirectArena, "allocator", allocator);
+        const arena = direct_allocator.next;
 
-        arena.offset = std.mem.alignForward(arena.offset, new_align);
-
-        if(arena.offset + new_size <= std.mem.page_size) {
-            const slice = @intToPtr([*]u8, @ptrToInt(arena) + arena.offset)[0..new_size];
-            arena.offset += new_size;
-            if(old_mem_unaligned.len > 0)
-                @memcpy(slice.ptr, old_mem_unaligned.ptr, old_mem_unaligned.len);
-            return slice;
+        // Simple alloc
+        {
+            const offset = std.mem.alignForward(arena.offset, new_align);
+            if(offset + new_size <= std.mem.page_size) {
+                const slice = @intToPtr([*]u8, @ptrToInt(arena) + offset)[0..new_size];
+                arena.offset = offset + new_size;
+                if(old_mem_unaligned.len > 0)
+                    @memcpy(slice.ptr, old_mem_unaligned.ptr, old_mem_unaligned.len);
+                return slice;
+            }
         }
 
-        const next_slice = os.mmap(
-            null,
-            std.mem.page_size,
-            os.PROT_READ | os.PROT_WRITE,
-            os.MAP_PRIVATE | os.MAP_ANONYMOUS,
-            -1,
-            0,
-        ) catch return error.OutOfMemory;
-        const next = @ptrCast(*DirectArena, next_slice.ptr);
-        next.offset = std.mem.alignForward(@sizeOf(DirectArena), new_align);
-        next.next = arena;
-        @fieldParentPtr(DirectArena, "allocator", allocator).next = next;
+        const next_offset = std.mem.alignForward(@sizeOf(DirectArena), new_align);
+        if(next_offset + new_size < std.mem.page_size) {
+            const next_slice = os.mmap(
+                null,
+                std.mem.page_size,
+                os.PROT_READ | os.PROT_WRITE,
+                os.MAP_PRIVATE | os.MAP_ANONYMOUS,
+                -1,
+                0,
+            ) catch return error.OutOfMemory;
+            const next = @ptrCast(*DirectArena, next_slice.ptr);
+            next.offset = next_offset;
+            next.next = arena;
+            direct_allocator.next = next;
 
-        if(next.offset + new_size <= std.mem.page_size) {
             const slice = @intToPtr([*]u8, @ptrToInt(next) + next.offset)[0..new_size];
             next.offset += new_size;
             if(old_mem_unaligned.len > 0)
                 @memcpy(slice.ptr, old_mem_unaligned.ptr, old_mem_unaligned.len);
             return slice;
         }
-
-        const x = try std.heap.c_allocator.alloc(u8, new_size);
-        if(old_mem_unaligned.len > 0)
-                @memcpy(x.ptr, old_mem_unaligned.ptr, old_mem_unaligned.len);
-
-        return x;
+        else {
+            const next_slice = os.mmap(
+                null,
+                (std.mem.page_size + next_offset + new_size - 1) & ~usize(std.mem.page_size-1),
+                os.PROT_READ | os.PROT_WRITE,
+                os.MAP_PRIVATE | os.MAP_ANONYMOUS,
+                -1,
+                0,
+            ) catch return error.OutOfMemory;
+            const next = @ptrCast(*DirectArena, next_slice.ptr);
+            next.offset = next_slice.len;
+            if(direct_allocator == arena) {
+                next.next = arena;
+                direct_allocator.next = next;
+            }
+            else {
+                next.next = arena.next.next;
+                arena.next = next;
+            }
+            const slice = @intToPtr([*]u8, @ptrToInt(next) + next_offset)[0..next_slice.len-next_offset];
+            if(old_mem_unaligned.len > 0)
+                @memcpy(slice.ptr, old_mem_unaligned.ptr, old_mem_unaligned.len);
+            return slice;
+        }
     }
 };
