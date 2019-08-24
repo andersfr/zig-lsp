@@ -432,12 +432,15 @@ pub const Parser = struct {
     }
 
     pub fn deinit(self: *Parser) void {
+        self.engine.deinit();
         self.arena.deinit();
+        self.tokens.deinit();
     }
 
     pub fn run(self: *Parser, buffer: []const u8) !bool {
         self.engine = Engine.init(self.allocator, &self.arena.allocator);
         self.tokens = std.ArrayList(Token).init(self.allocator);
+        errdefer self.tokens.deinit();
 
         try self.tokens.ensureCapacity((buffer.len*10)/8);
 

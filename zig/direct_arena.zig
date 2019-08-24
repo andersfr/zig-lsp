@@ -110,8 +110,24 @@ pub const DirectArena = struct {
                 arena.next = next;
             }
             const slice = @intToPtr([*]u8, @ptrToInt(next) + next_offset)[0..next_slice.len-next_offset];
-            if(old_mem_unaligned.len > 0)
+            if(old_mem_unaligned.len > 0) {
                 @memcpy(slice.ptr, old_mem_unaligned.ptr, old_mem_unaligned.len);
+                // Note: this will save some memory but propably not worthwhile
+                // if(old_mem_unaligned.len >= std.mem.page_size) {
+                //     const forget = @intToPtr(*DirectArena, @ptrToInt(old_mem_unaligned.ptr) & ~usize(std.mem.page_size-1));
+                //     if(forget == arena) {
+                //         direct_allocator.next = arena.next;
+                //     }
+                //     else {
+                //         var ptr = arena;
+                //         while(ptr.next != forget) : (ptr = ptr.next) {
+                //             warn("forget: {x}, ptr: {x}\n", @ptrToInt(forget), @ptrToInt(ptr));
+                //         }
+                //         ptr.next = forget.next;
+                //     }
+                //     os.munmap(@intToPtr([*]align(std.mem.page_size) u8, @ptrToInt(forget))[0..old_mem_unaligned.len]);
+                // }
+            }
             return slice;
         }
     }
