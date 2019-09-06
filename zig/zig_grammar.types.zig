@@ -148,7 +148,18 @@ pub const Node = struct {
         const first_line = first_nl.start;
         const last_line = last_nl.start;
 
-        std.debug.warn("{} ({}:{}-{}:{})\n", @tagName(self.id), first_line, first_col, last_line, last_col);
+        if(self.cast(Node.PrefixOp)) |op| {
+            std.debug.warn("{} ({}:{}-{}:{})\n", @tagName(op.op), first_line, first_col, last_line, last_col);
+        }
+        else if(self.cast(Node.InfixOp)) |op| {
+            std.debug.warn("{} ({}:{}-{}:{})\n", @tagName(op.op), first_line, first_col, last_line, last_col);
+        }
+        else if(self.cast(Node.SuffixOp)) |op| {
+            std.debug.warn("{} ({}:{}-{}:{})\n", @tagName(op.op), first_line, first_col, last_line, last_col);
+        }
+        else {
+            std.debug.warn("{} ({}:{}-{}:{})\n", @tagName(self.id), first_line, first_col, last_line, last_col);
+        }
 
         var child_i: usize = 0;
         while (self.iterate(child_i)) |child| : (child_i += 1) {
@@ -486,7 +497,6 @@ pub const Node = struct {
 
         pub fn firstToken(self: *const FnProto) TokenIndex {
             if (self.visib_token) |visib_token| return visib_token;
-            if (self.async_attr) |async_attr| return async_attr.firstToken();
             if (self.extern_export_inline_token) |extern_export_inline_token| return extern_export_inline_token;
             assert(self.lib_name == null);
             if (self.cc_token) |cc_token| return cc_token;
@@ -1190,6 +1200,7 @@ pub const Node = struct {
                 Op.NegationWrap,
                 Op.Try,
                 Op.Resume,
+                Op.Async,
                 => {},
             }
 
@@ -1302,10 +1313,6 @@ pub const Node = struct {
         }
 
         pub fn firstToken(self: *const SuffixOp) TokenIndex {
-            switch (self.op) {
-                .Call => |*call_info| if (call_info.async_attr) |async_attr| return async_attr.firstToken(),
-                else => {},
-            }
             return self.lhs.firstToken();
         }
 

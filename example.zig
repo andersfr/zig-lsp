@@ -16,6 +16,8 @@ pub async fn nextCodepointSlice(it: *Utf8Iterator) ?[]const u8 {
 
     cklj = asdf;
 
+    var num = 0.0;
+
     gfd.fds.*;
 }
 

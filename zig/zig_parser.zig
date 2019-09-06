@@ -423,6 +423,7 @@ pub const Parser = struct {
     arena: *DirectArena,
     engine: Engine = undefined,
     tokens: std.ArrayList(Token) = undefined,
+    root: ?*Node.Root = null,
 
     pub fn init(allocator: *std.mem.Allocator) !Parser {
         var arena = try DirectArena.init();
@@ -525,6 +526,7 @@ pub const Parser = struct {
             if(shebang != 0)
                 Root.shebang_token = &self.tokens.items[1];
             Root.eof_token = &self.tokens.items[self.tokens.len - 1];
+            self.root = Root;
             return true;
         }
         if(self.engine.errors.len > 0 and self.engine.errors.at(self.engine.errors.len-1).info == .AbortedParse)

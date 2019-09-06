@@ -68,6 +68,7 @@ pub const Lexer = struct {
         while(true) {
             switch (self.peek) {
                 '0'...'9','a'...'f','A'...'F' => { id = Id.IntegerLiteral; },
+                '.' => { return if(id == Id.Invalid) id else self.float_digits(true); },
                 else => return id,
             }
             self.getc();
@@ -102,7 +103,20 @@ pub const Lexer = struct {
         while(true) {
             switch (self.peek) {
                 '0'...'9' => {},
+                '.' => return self.float_digits(false),
                 else => return Id.IntegerLiteral,
+            }
+            self.getc();
+        }
+    }
+
+    fn float_digits(self: *Lexer, allow_hex: bool) Id {
+        self.getc();
+        while(true) {
+            switch (self.peek) {
+                '0'...'9' => {},
+                'a'...'f','A'...'F' => { if(!allow_hex) return Id.FloatLiteral; },
+                else => return Id.FloatLiteral,
             }
             self.getc();
         }
