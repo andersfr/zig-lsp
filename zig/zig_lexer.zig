@@ -112,6 +112,10 @@ pub const Lexer = struct {
 
     fn float_digits(self: *Lexer, allow_hex: bool) Id {
         self.getc();
+        if(self.peek == '.') {
+            self.index -= 1;
+            return Id.IntegerLiteral;
+        }
         while(true) {
             switch (self.peek) {
                 '0'...'9' => {},
