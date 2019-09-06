@@ -4,8 +4,8 @@ Language Server Protocol for Zig
 ## Setup
 ```sh
 git clone https://github.com/andersfr/zig-flat-hash.git
-zig build-exe --single-threaded --release-fast parser.zig
-zig build-exe --single-threaded --release-fast server.zig
+zig build-exe --single-threaded --release-fast --library c parser.zig
+zig build-exe --single-threaded --release-fast --library c server.zig
 ```
 
 #### Vim
