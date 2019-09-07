@@ -17,6 +17,7 @@ pub async fn nextCodepointSlice(it: *Utf8Iterator) ?[]const u8 {
     cklj = asdf;
 
     var num = 0.0;
+    var num2 = 1e2;
     const c = @cImport({
         @cInclude("lzma_header.c");
     });
