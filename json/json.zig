@@ -286,7 +286,6 @@ pub const Json = struct {
 
         const root = @intToPtr(?*Variant, parser.stack.at(0).item) orelse return null;
 
-        return root.cast(Variant.Object) orelse null;
+        return root.cast(Variant.Object);
     }
 };
-
