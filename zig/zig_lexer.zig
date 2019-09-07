@@ -103,7 +103,7 @@ pub const Lexer = struct {
         while(true) {
             switch (self.peek) {
                 '0'...'9' => {},
-                '.' => return self.float_digits(false),
+                '.', 'e' => return self.float_digits(false),
                 else => return Id.IntegerLiteral,
             }
             self.getc();
