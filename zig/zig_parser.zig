@@ -443,7 +443,7 @@ pub const Parser = struct {
         self.tokens = std.ArrayList(Token).init(self.allocator);
         errdefer self.tokens.deinit();
 
-        try self.tokens.ensureCapacity((buffer.len*10)/8);
+        try self.tokens.ensureCapacity((buffer.len * 10) / 8);
 
         var lexer = Lexer.init(buffer);
 
@@ -454,13 +454,13 @@ pub const Parser = struct {
             if (token.id == .Eof)
                 break;
         }
-        const shebang = if (self.tokens.items[1].id == .ShebangLine) usize(1) else usize(0);
+        const shebang = if (self.tokens.items[1].id == .ShebangLine) @as(usize, 1) else @as(usize, 0);
         var i: usize = shebang + 1;
         // If file starts with a DocComment this is considered a RootComment
         while (i < self.tokens.len) : (i += 1) {
             self.tokens.items[i].id = if (self.tokens.items[i].id == .DocComment) .RootDocComment else break;
         }
-        i = shebang+1;
+        i = shebang + 1;
         var line: usize = 1;
         var last_newline = &self.tokens.items[0];
         var resync_progress: usize = 0;
@@ -513,23 +513,23 @@ pub const Parser = struct {
             break :parser_loop;
         }
         // Aborted parse may overrun counter
-        if(i >= self.tokens.len) i = self.tokens.len-1;
+        if (i >= self.tokens.len) i = self.tokens.len - 1;
 
         stack_trace("\n");
         if (self.engine.stack.len > 0) {
             const Root = @intToPtr(?*Node.Root, self.engine.stack.at(0).item) orelse {
-                if(self.engine.errors.len > 0 and self.engine.errors.at(self.engine.errors.len-1).info == .AbortedParse)
+                if (self.engine.errors.len > 0 and self.engine.errors.at(self.engine.errors.len - 1).info == .AbortedParse)
                     return false;
                 try self.engine.reportError(ParseError.AbortedParse, &self.tokens.items[i]);
                 return false;
             };
-            if(shebang != 0)
+            if (shebang != 0)
                 Root.shebang_token = &self.tokens.items[1];
             Root.eof_token = &self.tokens.items[self.tokens.len - 1];
             self.root = Root;
             return true;
         }
-        if(self.engine.errors.len > 0 and self.engine.errors.at(self.engine.errors.len-1).info == .AbortedParse)
+        if (self.engine.errors.len > 0 and self.engine.errors.at(self.engine.errors.len - 1).info == .AbortedParse)
             return false;
 
         try self.engine.reportError(ParseError.AbortedParse, &self.tokens.items[i]);
